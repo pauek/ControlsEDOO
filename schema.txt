@@ -1,0 +1,6 @@
+* Temes (nom, puntuació, requisits)
+* Controls (tema, aula, data)
+* Alumnes (loginUPC, nom, dni, temes_superats?)
+* Inscrits (id_alumne, id_control)
+* Notes (id_alumne, id_control, nota)
+* Professors (loginUPC, nom)
