@@ -1,0 +1,20 @@
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular-resource.min.js"></script>
+	<script type="text/javascript" src="js/main.js" ></script>
+<link rel="stylesheet" type="text/css" href="resources/format_login.css" />
+	<title>login</title>
+	<h1>Reserva de controls</h1>
+	<h4>Login</h4>
+</head>
+<body ng-app="angular_app" ng-controller="app_ctrl">
+	
+	<input type="text" ng-click="user_aigua()" ng-model="user"></input>
+
+	<form ng-repeat="t in ok" ng-submit="submit()" >
+		<input type="text" ng-click="pasword_aigua()" ng-model="pasword"></input></br>
+		<button>Entra</button>
+	</form>
+</body>
+</html>

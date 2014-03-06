@@ -1,0 +1,13 @@
+table{
+	border: 1px solid #ccc; 
+    margin-bottom: 5px;
+    padding: 3px;
+}
+td {
+	border: 1px dashed #ccc; 
+    margin-bottom: 2px;
+    padding: 4px;
+}
+h4{
+	color: RED;
+}
