@@ -1,4 +1,17 @@
-var app = angular.module('angular_app',['ngResource']);
+var app = angular.module('angular_app',['ngResource', 'ngRoute']);
+
+app.config(function($routeProvider) {
+   $routeProvider
+      .when('/', {
+         templateUrl: "login.html",
+      })
+      .when('/alumne', {
+         templateUrl: "alumne.html",
+      })
+      .otherwise({
+         template: "Página no encontrada",
+      });
+});
  
 app.controller('app_ctrl', function ($scope, $resource, $location){
 
@@ -12,26 +25,18 @@ app.controller('app_ctrl', function ($scope, $resource, $location){
 		{id:"3",name:"while", nivell:"2",aula:"Per determinar", data:"8/03/2014"},
 	];
 
-	$scope.user = "usuari";
-	$scope.pasword = "contrasenya";
+	$scope.info = {};
+
 	$scope.ok = [
 		{url:"index.html"},
 	];
 
-	$scope.user_aigua = function(){
-		$scope.user = "";
-	}
-
-	$scope.pasword_aigua = function(){
-		$scope.pasword = "";
-	}
-
 	$scope.submit = function(){
-		
-		if ($scope.user=="marc"&&$scope.pasword=="andres"){
-			$location.url('');
+		console.log($scope);
+		if ($scope.info.user=="marc" && $scope.info.password=="andres"){
+         $location.url('/alumne');
 		} else {
-			$location.url('');
-			}
+         alert("Login failed!");
+		}
 	}	
 }); 
