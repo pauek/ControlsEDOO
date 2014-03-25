@@ -33,10 +33,16 @@ app.controller('app_ctrl', function ($scope, $resource, $location){
 
 	$scope.submit = function(){
 		console.log($scope);
-		if ($scope.info.user=="marc" && $scope.info.password=="andres"){
+		$http.post('/acces_login', $scope.info).
+		success(function(){
+			$location.url('/alumne');
+		}).error(function(){
+			alert("Login failed!");
+		});
+		/*if ($scope.info.user=="marc" && $scope.info.password=="andres"){
          $location.url('/alumne');
 		} else {
          alert("Login failed!");
-		}
+		}*/
 	}	
 }); 

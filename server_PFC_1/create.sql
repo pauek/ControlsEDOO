@@ -1,9 +1,9 @@
 
-CREATE TABLE controls (TEMA TEXT, AULA TEXT, DATA TEXT);
+CREATE TABLE controls (tema TEXT, aula TEXT, data TEXT);
 
-CREATE TABLE alumnes (NOM TEXT, LOGIN TEXT);
+CREATE TABLE alumnes (nom TEXT, login TEXT, password TEXT);
 
-CREATE TABLE temes (TEMA TEXT, AULA TEXT, DATA TEXT);
+CREATE TABLE temes (tema TEXT, aula TEXT, data TEXT);
 
 CREATE TABLE inscits (id_alumne INTEGER, id_control INTEGER);
 

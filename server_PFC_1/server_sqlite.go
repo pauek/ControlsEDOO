@@ -2,61 +2,57 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
 	_ "github.com/mattn/go-sqlite3"
 	//"html/template"
-	//"log"
+	"log"
 	//"io/ioutil"
 	"net/http"
 	//"os"
 )
 
-/**func GETuser_Handler(w http.ResponseWriter, r *http.Request) {
-	response, _, err := http.Get("/")
-	if err != nil {
-		fmt.Printf("%s", err)
-		os.Exit(1)
-	} else {
-		defer response.Body.Close()
-		contents, err := ioutil.ReadAll(response.Body)
+func crearBBDD(crear bool) {
+	if crear == true {
+
+		db, err := sql.Open("sqlite3", "BBDD.db")
 		if err != nil {
-			fmt.Printf("%s", err)
-			os.Exit(1)
+			fmt.Printf("open: %v\n", err)
+			return
 		}
-		fmt.Printf("%s\n", string(contents))
+
+		db.Exec("CREATE TABLE controls (tema TEXT, aula TEXT, data TEXT);")
+		db.Exec("CREATE TABLE alumnes (nom TEXT, login TEXT);")
+		db.Exec("CREATE TABLE temes (tema TEXT, aula TEXT, data TEXT);")
+		db.Exec("CREATE TABLE inscits (id_alumne INTEGER, id_control INTEGER);")
+		db.Exec("CREATE TABLE notes (id_alumne INTEGER, id_control INTEGER, nota INTEGER);")
+		db.Exec("CREATE TABLE professors (loginUPC TEXT, nom TEXT);")
 	}
-}*/
+}
+
+func hLogin(w http.ResponseWriter, r *http.Request) {
+	req := make(map[string]string)
+	json.NewDecoder(r.Body).Decode(&req)
+	txt, ok := mux.Vars(r)["user"]
+	log.Println(txt)
+	if !ok {
+		/*if txt  {
+
+												}*/
+		http.Error(w, "usuari incorrecte", http.StatusBadRequest)
+		return
+	}
+	//return http.StatusOK
+}
 
 func main() {
 
-	/*response, err := http.Get("http://golang.org/")
-	if err != nil {
-		fmt.Printf("%s", err)
-		os.Exit(1)
-	} else {
-		defer response.Body.Close()
-		contents, err := ioutil.ReadAll(response.Body)
-		if err != nil {
-			fmt.Printf("%s", err)
-			os.Exit(1)
-		}
-		fmt.Printf("%s\n", string(contents))
-	}*/
+	r := mux.NewRouter()
+	r.HandleFunc("/acces_login", hLogin).Methods("POST")
+	crearBBDD(true)
 
-	db, err := sql.Open("sqlite3", "BBDD.db")
-	if err != nil {
-		fmt.Printf("open: %v\n", err)
-		return
-	}
-
-	db.Exec("CREATE TABLE controls (tema TEXT, aula TEXT, data TEXT);")
-	db.Exec("CREATE TABLE alumnes (nom TEXT, login TEXT);")
-	db.Exec("CREATE TABLE temes (tema TEXT, aula TEXT, data TEXT);")
-	db.Exec("CREATE TABLE inscits (id_alumne INTEGER, id_control INTEGER);")
-	db.Exec("CREATE TABLE notes (id_alumne INTEGER, id_control INTEGER, nota INTEGER);")
-	db.Exec("CREATE TABLE professors (loginUPC TEXT, nom TEXT);")
-
-	db.Exec("INSERT INTO  alumnes (nom, login) VALUES ('Marc Andrés Fontanet','marc.andres.fontanet');")
+	//db.Exec("INSERT INTO  alumnes (nom, login) VALUES ('Marc Andrés Fontanet','marc.andres.fontanet');")
 
 	http.Handle("js/", http.StripPrefix("static/js/", http.FileServer(http.Dir("static/js"))))
 	http.Handle("resources/", http.StripPrefix("static/resources/", http.FileServer(http.Dir("static/resources"))))
