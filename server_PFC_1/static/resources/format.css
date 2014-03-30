@@ -1,13 +1,32 @@
-table{
-	border: 1px solid #ccc; 
-    margin-bottom: 5px;
-    padding: 3px;
+body{
+	background-color: #E7B823;
 }
-td {
-	border: 1px dashed #ccc; 
-    margin-bottom: 2px;
-    padding: 4px;
+
+.programats{
+	background-color: #888;
+	border-collapse: collapse;
+	border: 2px solid black;
+	width: 50%;
+	text-align: center;
+	/*margin: 0 auto; */
+	box-shadow: 10px 10px 5px 2px rgba(100, 100, 100, 0.5)
 }
+.programats tr td {
+	/*padding: 2px;*/
+	border: 1px solid black;
+}
+
+.programats tr th {
+	background-color: #888;
+	color: #CCC;
+	border: 2px solid black;
+	font-size: 1.5em;
+}
+
+#div_proposats{
+	margin-top: 100px;
+}
+
 h4{
 	color: RED;
 }

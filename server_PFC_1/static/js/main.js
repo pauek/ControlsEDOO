@@ -5,6 +5,9 @@ app.config(function($routeProvider) {
       .when('/', {
          templateUrl: "login.html",
       })
+      .when('/profe', {
+         templateUrl: "profe.html",
+      })
       .when('/alumne', {
          templateUrl: "alumne.html",
       })
@@ -13,29 +16,31 @@ app.config(function($routeProvider) {
       });
 });
  
-app.controller('app_ctrl', function ($scope, $resource, $location){
+app.controller('app_ctrl', function ($scope, $resource, $location, $http){
 
-	$scope.dades = [
+	/*$scope.dades = [
 		{dni:"43566438E",nivell:"1"},
+	];*/
+
+	$scope.controls = [
+		{id:"1",tema:"maps",aula:"2.12", data:"24/05/2014"},
+		{id:"2",tema:"for",aula:"1.18", data:"14/04/2014"},
+		{id:"3",tema:"while",aula:"Per determinar", data:"8/03/2014"},
 	];
 
-	$scope.examens = [
-		{id:"1",name:"maps", nivell:"3",aula:"2.12", data:"24/05/2014"},
-		{id:"2",name:"for", nivell:"1",aula:"1.18", data:"14/04/2014"},
-		{id:"3",name:"while", nivell:"2",aula:"Per determinar", data:"8/03/2014"},
+	$scope.proposats = [
+		{tema: "if/else", data:"30/5/2014"},
+		{tema: "for", data:"28/5/2014"},
 	];
 
-	$scope.info = {};
+	$scope.inf = {};
 
-	$scope.ok = [
-		{url:"index.html"},
-	];
-
+	
 	$scope.submit = function(){
-		console.log($scope);
-		$http.post('/acces_login', $scope.info).
+		console.log($scope.inf);
+		$http.post('/acces_login',$scope.inf).
 		success(function(){
-			$location.url('/alumne');
+			$location.url('/profe');
 		}).error(function(){
 			alert("Login failed!");
 		});
