@@ -26,17 +26,17 @@ func crearBBDD(crear bool) {
 
 		db.Exec("CREATE TABLE controls (tema TEXT, aula TEXT, data TEXT);")
 		db.Exec("CREATE TABLE proposats (tema TEXT, data TEXT, alumne TEXT);")
-		db.Exec("CREATE TABLE alumnes (nom TEXT, login TEXT);")
+		db.Exec("CREATE TABLE usuaris (nom TEXT, password TEXT, tipus TEXT);")
 		db.Exec("CREATE TABLE temes (tema TEXT, aula TEXT, data TEXT);")
-		db.Exec("CREATE TABLE inscits (id_alumne INTEGER, id_control INTEGER);")
+		db.Exec("CREATE TABLE inscrits (id_alumne INTEGER, id_control INTEGER);")
 		db.Exec("CREATE TABLE notes (id_alumne INTEGER, id_control INTEGER, nota INTEGER);")
-		db.Exec("CREATE TABLE professors (nom TEXT, loginUPC TEXT);")
 		//trans, err := db.Begin()
 		//if err != nil {
 		//	log.Printf("begin: %v\n", err)
 		//}
-		db.Exec("insert into alumnes(nom, login) values('marc.andres.fontanet', '12345678');")
-		db.Exec("insert into professors(nom, loginUPC) values('pau.fernandez', '12345678');")
+		db.Exec("insert into usuaris(nom, password, tipus) values('marc.andres.fontanet', '12345678', 'alumne');")
+		db.Exec("insert into usuaris(nom, password, tipus) values('pau.fernandez', '12345678', 'professor');")
+		db.Exec("insert into usuaris(nom, password, tipus) values('user', '1234', 'professor');")
 		log.Println("insert")
 		/*if err != nil {
 
@@ -62,29 +62,79 @@ func hLogin(w http.ResponseWriter, r *http.Request) {
 
 	defer db.Close()
 
-	stmt, err := db.Prepare("select login from alumnes where nom = ?")
+	stmt, err := db.Prepare("select nom, password, tipus from usuaris where nom = ?")
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		http.Error(w, "error intern", http.StatusInternalServerError)
+		return
 	}
 	defer stmt.Close()
-	//stmt2, err := db.Prepare("select loginUPC from professors where nom = ?")
-	var name string
-	//var name2 string
-	err = stmt.QueryRow(req["user"]).Scan(&name)
+	var (
+		nom, passwd, tipus string
+	)
+	//var name string
+	err = stmt.QueryRow(req["user"]).Scan(&nom, &passwd, &tipus)
 	if err != nil {
-		log.Fatal(err)
-	}
-	/*err = stmt2.QueryRow(req["user"]).Scan(&name2)
-	if err != nil {
-		log.Fatal(err)
-	}*/
-	if name == req["password"] /* || (name2 == req["password"])*/ {
+		log.Println(err)
+		http.Error(w, "error intern", http.StatusInternalServerError)
 		return
-	} else {
+	}
+	if passwd != req["password"] /* || (name2 == req["password"])*/ {
 		log.Println("adeu3")
 		http.Error(w, "usuari incorrecte", http.StatusBadRequest)
 		return
 	}
+
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"nom":    nom,
+		"passwd": passwd,
+		"tipus":  tipus,
+	})
+}
+
+func hAddUser(w http.ResponseWriter, r *http.Request) {
+	log.Println("adeu")
+	//req := struct{ Title string }{}
+	req := make(map[string]string)
+	json.NewDecoder(r.Body).Decode(&req)
+	log.Println("adeu2")
+
+	db, err := sql.Open("sqlite3", "./BBDD.db")
+	if err != nil {
+		fmt.Printf("open: %v\n", err)
+		return
+	}
+
+	defer db.Close()
+
+	stmt, err := db.Prepare("select nom from usuaris where nom = ?")
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "error intern", http.StatusInternalServerError)
+		return
+	}
+	defer stmt.Close()
+	var stat string
+	stat = "NOok"
+	var nom string
+	//var name string
+	err = stmt.QueryRow(req["user"]).Scan(&nom)
+	if err != nil {
+		db.Exec("insert into usuaris(nom, password, tipus) values('" + req["user"] + "', '" + req["password"] + "', '" + req["tipus"] + "');")
+		log.Println(err)
+		stat = "ok"
+		//http.Error(w, "error intern", http.StatusInternalServerError)
+		//return
+	}
+	/*if passwd != req["password"] {
+		log.Println("adeu3")
+		http.Error(w, "usuari incorrecte", http.StatusBadRequest)
+		return
+	}*/
+
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"ok": stat,
+	})
 }
 
 func main() {
@@ -92,6 +142,8 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/acces_login", hLogin).Methods("POST")
 	http.Handle("/acces_login", r)
+	r.HandleFunc("/addUser", hAddUser).Methods("POST")
+	http.Handle("/addUser", r)
 	crearBBDD(true)
 
 	//db.Exec("INSERT INTO  alumnes (nom, login) VALUES ('Marc Andrés Fontanet','marc.andres.fontanet');")
@@ -99,7 +151,7 @@ func main() {
 	http.Handle("js/", http.StripPrefix("static/js/", http.FileServer(http.Dir("static/js"))))
 	http.Handle("resources/", http.StripPrefix("static/resources/", http.FileServer(http.Dir("static/resources"))))
 	http.Handle("/", http.FileServer(http.Dir("static")))
-	http.ListenAndServe(":8080", nil)
+	log.Fatal(http.ListenAndServe(":8080", nil))
 
 	//var count int
 

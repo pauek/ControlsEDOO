@@ -1,26 +1,93 @@
 body{
-	background-color: #E7B823;
+	margin: 0px !important;
+	/*background-color: #E7B823;*/
+}
+#navigation {
+clear: both;
+overflow: hidden;
+min-width: 1027px;
+max-width: 100%;
+margin: 0 auto;
+/*background: #070707;*/
+background-color: #000;
+}
+
+#menu{
+	float: right;
+	background-color: #000;
+	width: 317px;
+}
+
+#navigation_user{
+	position: absolute;
+	margin-top: 10px;
+	margin-right: 10px; 
+	background-color: #000;
+	/*height: 0px;*/
+}
+#navigation_user a{
+text-decoration: none;
+color: #3373DF;
+/*color: red; */
+}
+#navigation_user h3{
+/*font-family: 2em Arial, Helvetica;*/
+width: 250px;
+text-align: center;
+}
+
+#navigation_user ul{
+	background-color: #000;
+	position: relative;
+	/*z-index: 100 !important;*/
+	width: 250px;
+	padding: 0px;
+}
+
+#navigation_user ul li{
+	text-align: center;
+}
+
+#navigation_user ul li a{
+	text-align: center;
+	/*color: #FFF;*/
+}
+
+#title{
+	/*color: #FFF;*/
+	float: left;
+}
+#title a{
+	color: #EC910E;
+	text-decoration: none;
+}
+
+#edit_buton{
+	/*visibility: hidden;*/
 }
 
 .programats{
-	background-color: #888;
+	/*background-color: #888;*/
 	border-collapse: collapse;
-	border: 2px solid black;
+	/*border: 2px solid black;*/
 	width: 50%;
 	text-align: center;
-	/*margin: 0 auto; */
-	box-shadow: 10px 10px 5px 2px rgba(100, 100, 100, 0.5)
+	margin: 5px; 
+	/*box-shadow: 10px 10px 5px 2px rgba(100, 100, 100, 0.5)*/
 }
 .programats tr td {
-	/*padding: 2px;*/
-	border: 1px solid black;
+	padding: 2px;
+	/*border: 1px  black;*/
+	margin-top: 10px;
 }
 
 .programats tr th {
-	background-color: #888;
+	border-radius: 15px;
+	background-color: #1CCAEC;
 	color: #CCC;
-	border: 2px solid black;
+	/*border: 2px solid black;*/
 	font-size: 1.5em;
+	text-align: center;
 }
 
 #div_proposats{
@@ -28,5 +95,10 @@ body{
 }
 
 h4{
-	color: RED;
+	color: #404B4D;
+}
+
+.button_pen {
+	background-color: white;
+	border: none !important;
 }
