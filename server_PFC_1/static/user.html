@@ -1,26 +1,33 @@
 <div>
 	<div id="div_programats">
   		<h3>Controls programats</h3>
-  		<table class="programats">
+  		<div>
+  			Per fer
+  			<table class="programats">
 	 		<tr>
 				<th><h4>Examen</h4></th>
 				<th><h4>Aula</h4></th>
 				<th><h4>Data</h4></th>
 	 		</tr>
-	 		<tr class="per_fer"  ng-repeat="c in controls_per_fer">
+	 		<tr class="fets"  ng-repeat="c in controls_fets">
 				<td><input type="text" id="1" class="{{$index}}" ng-hide="true"><span id="span" class="{{$index}}">{{c.tema}}</span></input></td> 
 				<td><input type="text" id="2" class="{{$index}}" ng-hide="true"><span id="span" class="{{$index}}">{{c.aula}}</span></input></td>
 				<td><input type="text" id="3" class="{{$index}}" ng-hide="true"><span id="span" class="{{$index}}">{{c.data}}</span></input></td>
-				<td><button type="button" class="button_pen" id="button_{{$index}}" ng-click="click_edit($index)" class="edit_button" class="btn btn-default btn-lg">
-  <span class="glyphicon glyphicon-pencil"></span>
-</button></td>
+				<td class="button_pen"><button type="button" class="button_pen" id="button_{{$index}}" ng-click="click_edit($index)" class="edit_button" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-pencil"></span></button></td>
+			<td class="button_pen"><button type="button" class="button_pen" id="button_{{$index}}" ng-click="click_edit($index)" class="edit_button" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-remove"></span></button></td>
 			</tr>
+			<tr>
+				<td><input type="text" class="af_Cntrl" ng-hide="true"></td><input type="text" class="af_Cntrl" ng-hide="true"><td><input type="text" class="af_Cntrl" ng-hide="true"></td><td></td><td><button ng-click="afegir_control()">afegir control</button></td>
+			</tr>
+		</div>
+		<div>
 
-			<tr class="fets"  ng-repeat="c in controls_per_fer">
+			<tr class="per_fer"  ng-repeat="c in controls_per_fer">
 				<td><input type="text" id="1" class="{{$index}}" ng-hide="true"><span id="span" class="{{$index}}">{{c.tema}}</span></input></td> 
 				<td><input type="text" id="2" class="{{$index}}" ng-hide="true"><span id="span" class="{{$index}}">{{c.aula}}</span></input></td>
 				<td><input type="text" id="3" class="{{$index}}" ng-hide="true"><span id="span" class="{{$index}}">{{c.data}}</span></input></td>
 			</tr>
+		</div>
   		</table>
 	</div>
 	<proposats ng-show="isVisible" >

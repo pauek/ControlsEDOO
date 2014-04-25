@@ -7,12 +7,26 @@ app.config(function($routeProvider) {
    $routeProvider
       .when('/', {
          templateUrl: "login.html",
+         controller: function($scope, $location){
+         	console.log("eeeeeei");
+         	console.log($scope.user.nom);
+         	if($scope.user.nom !== ""){
+		$location.url('/user');
+         }
+     	}
       })
       .when('/login', {
          templateUrl: "login.html",
       })
       .when('/user', {
          templateUrl: "user.html",
+         controller: function($scope, $location){
+         	console.log("eeeeeei");
+         	console.log($scope.user.nom);
+         	if($scope.user.nom === ""){
+		$location.url('/login');
+         }
+     	}
       })
       .when('/afegir_alumnes', {
          templateUrl: "afegir_alumnes.html",
@@ -22,12 +36,22 @@ app.config(function($routeProvider) {
       });
 });
  
+app.controller('user_ctrl', function ($scope, $resource, $location, $http){
+	if($scope.user.nom !== ""){
+		$location.purl('/user');
+	}
+
+});
 app.controller('app_ctrl', function ($scope, $resource, $location, $http){
 
 	/*$scope.dades = [
 		{dni:"43566438E",nivell:"1"},
 	];*/
-
+	$scope.controls_fets = [
+		{id:"1",tema:"maps",aula:"2.12", data:"24/05/2014"},
+		{id:"2",tema:"for",aula:"1.18", data:"14/04/2014"},
+		{id:"3",tema:"while",aula:"Per determinar", data:"8/03/2014"},
+	];
 	$scope.controls_per_fer = [
 		{id:"1",tema:"maps",aula:"2.12", data:"24/05/2014"},
 		{id:"2",tema:"for",aula:"1.18", data:"14/04/2014"},
@@ -51,7 +75,7 @@ app.controller('app_ctrl', function ($scope, $resource, $location, $http){
 		$scope.inf.user = "";
 		$scope.inf.password = "";
 		localStorage.user = "";
-		$location.path('/login')
+		$location.path('/login');
 	}
 
 	$scope.click_edit = function(index){
@@ -86,6 +110,13 @@ app.controller('app_ctrl', function ($scope, $resource, $location, $http){
 			alert("Login failed!");
 		});
 	}	
+
+
+	$scope.afegir_control = function(){
+		console.log("afegir control");
+		$(".af_Cntrl").show();
+
+	}
 
 
 	$scope.add_user = function(){

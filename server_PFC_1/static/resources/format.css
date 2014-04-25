@@ -79,6 +79,7 @@ text-align: center;
 	padding: 2px;
 	/*border: 1px  black;*/
 	margin-top: 10px;
+	/*border-radius: 15px;*/
 }
 
 .programats tr th {
@@ -101,4 +102,14 @@ h4{
 .button_pen {
 	background-color: white;
 	border: none !important;
+}
+
+.per_fer{
+	background-color: red;
+	border-radius: 15px;
+}
+
+.fets{
+	background-color: yellow;
+	border-radius: 15px;
 }
