@@ -11,6 +11,7 @@ import (
 	//"io/ioutil"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 func crearBBDD(crear bool) {
@@ -37,6 +38,9 @@ func crearBBDD(crear bool) {
 		db.Exec("insert into usuaris(nom, password, tipus) values('marc.andres.fontanet', '12345678', 'alumne');")
 		db.Exec("insert into usuaris(nom, password, tipus) values('pau.fernandez', '12345678', 'professor');")
 		db.Exec("insert into usuaris(nom, password, tipus) values('user', '1234', 'professor');")
+
+		db.Exec("insert into controls(tema, aula, data) values('Objectes + Strings', '2.18', '19/05/2014');")
+		db.Exec("insert into controls(tema, aula, data) values('Getline + While cin', '1.08', '25/05/2014');")
 		log.Println("insert")
 		/*if err != nil {
 
@@ -48,7 +52,7 @@ func crearBBDD(crear bool) {
 }
 
 func hLogin(w http.ResponseWriter, r *http.Request) {
-	log.Println("adeu")
+	log.Println("hLogin")
 	//req := struct{ Title string }{}
 	req := make(map[string]string)
 	json.NewDecoder(r.Body).Decode(&req)
@@ -93,7 +97,7 @@ func hLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func hAddUser(w http.ResponseWriter, r *http.Request) {
-	log.Println("adeu")
+	log.Println("AddUser")
 	//req := struct{ Title string }{}
 	req := make(map[string]string)
 	json.NewDecoder(r.Body).Decode(&req)
@@ -123,18 +127,89 @@ func hAddUser(w http.ResponseWriter, r *http.Request) {
 		db.Exec("insert into usuaris(nom, password, tipus) values('" + req["user"] + "', '" + req["password"] + "', '" + req["tipus"] + "');")
 		log.Println(err)
 		stat = "ok"
-		//http.Error(w, "error intern", http.StatusInternalServerError)
-		//return
 	}
-	/*if passwd != req["password"] {
-		log.Println("adeu3")
-		http.Error(w, "usuari incorrecte", http.StatusBadRequest)
-		return
-	}*/
 
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"ok": stat,
 	})
+}
+
+func hAddControl(w http.ResponseWriter, r *http.Request) {
+	log.Println("AddControl")
+	//req := struct{ Title string }{}
+	req := make(map[string]string)
+	json.NewDecoder(r.Body).Decode(&req)
+	log.Println("req passat")
+
+	db, err := sql.Open("sqlite3", "./BBDD.db")
+	if err != nil {
+		fmt.Printf("open: %v\n", err)
+		return
+	}
+
+	defer db.Close()
+	db.Exec("insert into controls(tema, aula, data) values('" + req["tema"] + "', '" + req["aula"] + "','" + req["data"] + "'');")
+	/*stmt, err := db.Prepare("select nom from usuaris where nom = ?")
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "error intern", http.StatusInternalServerError)
+		return
+	}
+	defer stmt.Close()*/
+	var stat string
+	stat = "NOok"
+	var nom string
+	//var name string
+	err = stmt.QueryRow(req["user"]).Scan(&nom)
+	if err != nil {
+		db.Exec("insert into usuaris(nom, password, tipus) values('" + req["user"] + "', '" + req["password"] + "', '" + req["tipus"] + "');")
+		log.Println(err)
+		stat = "ok"
+	}
+
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"ok": stat,
+	})
+}
+
+func hGetControls(w http.ResponseWriter, r *http.Request) {
+	log.Println("GetControls")
+
+	var req [10][3]string
+
+	db, err := sql.Open("sqlite3", "./BBDD.db")
+	if err != nil {
+		fmt.Printf("open: %v\n", err)
+		return
+	}
+
+	defer db.Close()
+
+	index := 0
+	res, err := db.Query("select * from controls")
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("paso1")
+	for res.Next() {
+		var tema, aula, data string
+		if err := res.Scan(&tema, &aula, &data); err != nil {
+			log.Fatal(err)
+		}
+		log.Println(tema)
+		req[index][0] = tema
+		req[index][1] = data
+		req[index][2] = aula
+		index++
+	}
+	t := strconv.Itoa(index)
+	req[9][0] = t
+	log.Println("paso2")
+	if err := res.Err(); err != nil {
+		log.Fatal(err)
+	}
+
+	json.NewEncoder(w).Encode(req)
 }
 
 func main() {
@@ -144,6 +219,10 @@ func main() {
 	http.Handle("/acces_login", r)
 	r.HandleFunc("/addUser", hAddUser).Methods("POST")
 	http.Handle("/addUser", r)
+	r.HandleFunc("/getControls", hGetControls).Methods("GET")
+	http.Handle("/getControls", r)
+	r.HandleFunc("/addControl", hAddControl).Methods("POST")
+	http.Handle("/addControl", r)
 	crearBBDD(true)
 
 	//db.Exec("INSERT INTO  alumnes (nom, login) VALUES ('Marc Andrés Fontanet','marc.andres.fontanet');")

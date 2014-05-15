@@ -9,40 +9,41 @@
 				<th><h4>Aula</h4></th>
 				<th><h4>Data</h4></th>
 	 		</tr>
-	 		<tr class="fets"  ng-repeat="c in controls_fets">
-				<td><input type="text" id="1" class="{{$index}}" ng-hide="true"><span id="span" class="{{$index}}">{{c.tema}}</span></input></td> 
-				<td><input type="text" id="2" class="{{$index}}" ng-hide="true"><span id="span" class="{{$index}}">{{c.aula}}</span></input></td>
-				<td><input type="text" id="3" class="{{$index}}" ng-hide="true"><span id="span" class="{{$index}}">{{c.data}}</span></input></td>
+	 		<tr class="per_fer"  ng-repeat="c in controls_per_fer track by $index">
+				<td><input type="text" id="" ng-hide="true"><span id="span">{{c.tema}}</span></input></td> 
+				<td><input type="text" id="" ng-hide="true"><span id="span">{{c.aula}}</span></input></td>
+				<td><input type="text" id="" ng-hide="true"><span id="span">{{c.data}}</span></input></td>
 				<td class="button_pen">
-              <button type="button" class="button_pen" id="button_{{$index}}" ng-click="click_edit($index)" class="edit_button" class="btn btn-default btn-lg">
+              <button type="button" ng-show="isVisible" class="button_pen" ng-click="" class="btn btn-default btn-lg" class="{{$index}}" >
                 <span class="glyphicon glyphicon-pencil"></span>
               </button>
             </td>
 			   <td class="button_pen">
-              <button type="button" id="button_{{$index}}" ng-click="click_edit($index)" class="button_pen edit_button btn btn-default btn-lg">
+              <button type="button" ng-show="isVisible" class="button_pen edit_button btn btn-default btn-lg" class="{{$index}}" ng-click="delete_exam($index)" >
                 <span class="glyphicon glyphicon-remove"></span>
               </button>
             </td>
 			</tr>
 			<tr>
 			  <td>
-             <input type="text" class="af_Cntrl" ng-show="isAdding">
+             <input type="text" class="af_Cntrl" ng-show="isAdding" ng-model="affControl.tema" placeholder="Tema">
            </td>
 			  <td>
-             <input type="text" class="af_Cntrl" ng-show="isAdding">
+             <input type="text" class="af_Cntrl" ng-show="isAdding" ng-model="affControl.aula" placeholder="Aula">
            </td>
            <td>
-             <input type="text" class="af_Cntrl" ng-show="isAdding">
+             <input type="text" class="af_Cntrl" ng-show="isAdding" ng-model="affControl.data" placeholder="Data">
            </td>
            <td colspan="2">
-             <button ng-click="afegir_control()">afegir control</button>
+             <button ng-click="afegir_control()" ng-show="isVisible">afegir control</button>
+             <button ng-click="cancelar_affControl()" ng-show="isAdding">Cancelar</button>
            </td>
          </tr>
          <tr style="height: 1em"></tr>
-			<tr class="per_fer"  ng-repeat="c in controls_per_fer">
-			  <td><input type="text" id="1" class="{{$index}}" ng-hide="true"><span id="span" class="{{$index}}">{{c.tema}}</span></input></td> 
-			  <td><input type="text" id="2" class="{{$index}}" ng-hide="true"><span id="span" class="{{$index}}">{{c.aula}}</span></input></td>
-			  <td><input type="text" id="3" class="{{$index}}" ng-hide="true"><span id="span" class="{{$index}}">{{c.data}}</span></input></td>
+			<tr class="fets"  ng-repeat="c in controls_fets track by $index">
+			  <td><input type="text" id="1" class="{{$index}}" ng-hide="true"><span id="span">{{c.tema}}</span></input></td> 
+			  <td><input type="text" id="2" ng-hide="true"><span id="span">{{c.aula}}</span></input></td>
+			  <td><input type="text" id="3"ng-hide="true"><span id="span" class="{{$index}}">{{c.data}}</span></input></td>
 			</tr>
   		</table>
 	</div>
