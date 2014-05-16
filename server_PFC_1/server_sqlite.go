@@ -166,16 +166,21 @@ func hAddControl(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		stat = "ok"
 	}
+   */
 
 	json.NewEncoder(w).Encode(map[string]interface{}{
-		"ok": stat,
+		// "ok": stat,
 	})
+}
+
+type Control struct {
+	Tema, Data, Aula string
 }
 
 func hGetControls(w http.ResponseWriter, r *http.Request) {
 	log.Println("GetControls")
 
-	var req [10][3]string
+	req := []Control{}
 
 	db, err := sql.Open("sqlite3", "./BBDD.db")
 	if err != nil {
@@ -185,30 +190,23 @@ func hGetControls(w http.ResponseWriter, r *http.Request) {
 
 	defer db.Close()
 
-	index := 0
 	res, err := db.Query("select * from controls")
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Println("paso1")
 	for res.Next() {
-		var tema, aula, data string
-		if err := res.Scan(&tema, &aula, &data); err != nil {
+		ctrl := Control{}
+		if err := res.Scan(&ctrl.Tema, &ctrl.Aula, &ctrl.Data); err != nil {
 			log.Fatal(err)
 		}
-		log.Println(tema)
-		req[index][0] = tema
-		req[index][1] = data
-		req[index][2] = aula
-		index++
+		log.Println(ctrl.Tema)
+		req = append(req, ctrl)
 	}
-	t := strconv.Itoa(index)
-	req[9][0] = t
 	log.Println("paso2")
 	if err := res.Err(); err != nil {
 		log.Fatal(err)
 	}
-
 	json.NewEncoder(w).Encode(req)
 }
 

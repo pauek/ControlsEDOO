@@ -113,10 +113,14 @@ app.controller('app_ctrl', function ($scope, $resource, $location, $http, $route
       $http.get('/getControls').
       success(function(data) { 
       	console.log(data);
-      	for(var i=0;i<data[9][0] ;i++){
+      	for(var i = 0; i < data.length; i++) {
       		//if(d.getYear() >)
       		//if(d.getMonth() > data[i][1].substring(3,5)){
-      		$scope.controls_per_fer.push({tema:data[i][0], data:data[i][1], aula:data[i][2]});
+      		$scope.controls_per_fer.push({
+               tema: data[i].Tema, 
+               data: data[i].Data, 
+               aula: data[i].Aula,
+            });
       	}
       }).
       error(function(){
