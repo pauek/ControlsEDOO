@@ -137,14 +137,13 @@ app.controller('app_ctrl', function ($scope, $resource, $location, $http, $route
 				   localStorage.visible = false;
 				   console.log("localstorage a false");
 				   console.log("localstorage: "+ localStorage.visible);
-				   $location.url('/user');
 			   } else {
 				   localStorage.user = $scope.user.nom;
 				   console.log(localStorage.user);
 				   $scope.isVisible = true;
 				   localStorage.visible = true;
-				   $location.url('/user');
 		      };
+				$location.url('/user');
 		   }).error(function(){
 			   alert("Login failed!");
 		   });
