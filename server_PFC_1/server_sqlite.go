@@ -11,7 +11,7 @@ import (
 	//"io/ioutil"
 	"net/http"
 	"os"
-	"strconv"
+	// "strconv"
 )
 
 func crearBBDD(crear bool) {
@@ -155,7 +155,7 @@ func hAddControl(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "error intern", http.StatusInternalServerError)
 		return
 	}
-	defer stmt.Close()*/
+	defer stmt.Close()
 	var stat string
 	stat = "NOok"
 	var nom string
