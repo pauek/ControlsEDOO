@@ -3,6 +3,16 @@
 	<form ng-submit="add_user()">
   <input type="text" placeholder="username"     ng-model="addUser.user"></input>
   <input type="text" placeholder="Password" ng-model="addUser.password"></input>
+
+  <div class="dropdown">
+  <br>
+  <button data-toggle="dropdown">{{tipus}}</button>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+  	<li><a href="" ng-click="admin()">Professor</a></li>
+  	<li><a href="" ng-click="alumne()">Alumne</a></li>
+  </ul>
+</div>
+<br><br><br>
   <button>Afegir</button>
 	</form>
 	<div id="resposta_addUser"></div>

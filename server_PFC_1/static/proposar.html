@@ -1,0 +1,17 @@
+<div id="proposar">
+	<br><br><br><br>
+  <h2>Proposar Control</h2>
+  <form ng-submit="add_proposta()">
+  <div class="dropdown">
+  <button data-toggle="dropdown">{{proposta.tema}}</button>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+  	<li><a ng-repeat="items in temes_proposta" href="" ng-click="tema_proposta($index)">{{items.tema}}</a></li>
+  </ul>
+</div>
+<br>
+ <input type="text" placeholder="data" ng-model="proposta.data"></input>
+<br><br><br>
+  <button>Afegir</button>
+	</form>
+	<div id="resposta_proposta"></div>
+</div>	

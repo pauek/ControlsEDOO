@@ -5,24 +5,27 @@
   		 <!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="resources/format.css" />
+		<link rel="stylesheet" type="text/css" href="resources/ng-quick-date.css" media="all">
+		<link rel="stylesheet" type="text/css" href="resources/ng-quick-date-default-theme.css" media="all">
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular-route.min.js"></script>
    		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular-resource.min.js"></script>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 		<!-- Latest compiled and minified JavaScript -->
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="js/ng-quick-date.js" ></script>
 		<script type="text/javascript" src="js/main.js" ></script>
 
 		<title>login</title>
 </head>
-<body ng-app="angular_app" ng-controller="app_ctrl">
+<body ng-app="angular_app">
   	<div id="navigation">
   		<h1 id="title"><a href="#/user">Reserva de controls</a></h1>
   		<div id="menu">
-  			<div id="navigation_user" class="dropdown">
-  			<a data-toggle="dropdown" href=""><h3>{{user.nom}}</h3></a>
+  			<div id="navigation_user" class="dropdown" ng-controller="menu_ctrl">
+  			<a data-toggle="dropdown" href=""><h3>{{user.getUserName()}}</h3></a>
   			<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-  				<li ng-repeat="items in menu" ng-show="items.visible"><a class="items_menu" href={{items.link}} >{{items.name}}</a></li>
+  				<li ng-repeat="items in menu" ng-show="items.visible.isAdmin()"><a class="items_menu" href={{items.link}} >{{items.name}}</a></li>
   				<li><a class="items_menu" ng-click="login_out()"  href="">Tancar sessió</a></li>
    				 <!-- <li><a href="">hola</a></li>
    				 <li ng-show={{isVisible}}><a href="/afegir_alumnes">Afegir alumnes</a></li>
