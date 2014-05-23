@@ -82,7 +82,7 @@ text-align: center;
 	/*border-radius: 15px;*/
 }
 
-.programats tr th {
+table.programats > tbody > tr > th {
 	border-radius: 15px;
 	background-color: #1CCAEC;
 	color: #CCC;

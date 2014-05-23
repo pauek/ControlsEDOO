@@ -1,10 +1,10 @@
 $('.dropdown-toggle').dropdown()
 var d = new Date();
 /*console.log(d);
-console.log(localStorage.day);
-console.log("localStorage = " + localStorage.user);
-//localStorage.user = (localStorage.user || null);
-//localStorage.visible = (localStorage.visible || null);*/
+  console.log(localStorage.day);
+  console.log("localStorage = " + localStorage.user);
+  //localStorage.user = (localStorage.user || null);
+  //localStorage.visible = (localStorage.visible || null);*/
 console.log(localStorage.visible);
 localStorage.day = d;
 var app = angular.module('angular_app',['ngResource', 'ngRoute', "ngQuickDate"]);
@@ -14,18 +14,18 @@ var app = angular.module('angular_app',['ngResource', 'ngRoute', "ngQuickDate"])
 
 
 /*app.config(function(ngQuickDateDefaultsProvider) {
-  // Configure with icons from font-awesome
-  return ngQuickDateDefaultsProvider.set({
-    closeButtonHtml: "<i class='fa fa-times'></i>",
-    buttonIconHtml: "<i class='fa fa-clock-o'></i>",
-    nextLinkHtml: "<i class='fa fa-chevron-right'></i>",
-    prevLinkHtml: "<i class='fa fa-chevron-left'></i>",
-    // Take advantage of Sugar.js date parsing
-    parseDateFunction: function(str) {
-      d = Date.create(str);
-      return d.isValid() ? d : null;
-    }
-  });
+// Configure with icons from font-awesome
+return ngQuickDateDefaultsProvider.set({
+closeButtonHtml: "<i class='fa fa-times'></i>",
+buttonIconHtml: "<i class='fa fa-clock-o'></i>",
+nextLinkHtml: "<i class='fa fa-chevron-right'></i>",
+prevLinkHtml: "<i class='fa fa-chevron-left'></i>",
+// Take advantage of Sugar.js date parsing
+parseDateFunction: function(str) {
+d = Date.create(str);
+return d.isValid() ? d : null;
+}
+});
 });*/
 
 
@@ -35,8 +35,7 @@ var app = angular.module('angular_app',['ngResource', 'ngRoute', "ngQuickDate"])
 app.config(function($routeProvider) {
    $routeProvider
       .when('/', {
-         templateUrl: "login.html",
-        controller: "login_ctrl",
+         redirectTo: '/login',
       })
       .when('/login', {
          templateUrl: "login.html",
@@ -62,7 +61,7 @@ app.factory('User', function($http, $rootScope, $route, $location) {
 	if(localStorage.user == "null"){
 		User.nom = null;
 	} else{
-	User.nom = localStorage.user || null;}
+	   User.nom = localStorage.user || null;}
 
 	User.Admin = localStorage.visible || null;
 	//User.isAdmin = false;
@@ -79,7 +78,7 @@ app.factory('User', function($http, $rootScope, $route, $location) {
    }
 
    User.getUserName = function(){
-   		return User.nom;
+   	return User.nom;
    }
 
    User.isLoggedIn = function () {
@@ -93,19 +92,19 @@ app.factory('User', function($http, $rootScope, $route, $location) {
 
    User.isReservar = function(index){
 		/*if(!User.Admin){
-		return $scope.User.controls[].reservat;
-		}else {return false;}
+		  return $scope.User.controls[].reservat;
+		  }else {return false;}
 		*/
 	}
 
    User.login = function(_user){
 		$http.post('/acces_login',_user).
 		   success(function(data){
-		   	 console.log("noom: "+data.nom+" , passwd: " +data.passwd + ",  tipus: " +data.tipus)
+		   	console.log("noom: "+data.nom+" , passwd: " +data.passwd + ",  tipus: " +data.tipus)
 			  	User.copyData(data);
 			   //	localStorage.user = "holaaaaaa";
-			   	//localStorage.visible = User.tipus;
-			   	localStorage.user = User.nom;
+			   //localStorage.visible = User.tipus;
+			   localStorage.user = User.nom;
 			  	console.log(localStorage.user);
 				$location.url('/user');
 				//$route.reload();
@@ -113,11 +112,11 @@ app.factory('User', function($http, $rootScope, $route, $location) {
 			   alert("Login failed!");
 			   $route.reload();
 		   });
-		   console.log("islogged in: " + User.isLoggedIn());
+		console.log("islogged in: " + User.isLoggedIn());
    }
 
    User.logout = function(){
-   	   User.nom = null;
+   	User.nom = null;
       delete User.password;
       delete User.Admin;
       delete localStorage.user;
@@ -131,8 +130,8 @@ app.controller('menu_ctrl', function ($scope, $resource, $location, $http, $rout
 	$scope.user = User;
 	var a = {
 		"isAdmin": function(){
-		return true;
-	}}
+		   return true;
+	   }}
 
 	$scope.login_out = function(){
 		User.logout();
@@ -151,9 +150,9 @@ d
 
 app.controller('login_ctrl', function ($scope, $resource, $location, $http, $route,User) {
 	if(User.isLoggedIn() == true){
-         		console.log("holaaaaaa");
-		         $location.url('/user');
-            }
+      console.log("holaaaaaa");
+		$location.url('/user');
+   }
 
 	$scope.inf = {};
 
@@ -166,26 +165,27 @@ app.controller('login_ctrl', function ($scope, $resource, $location, $http, $rou
 	}	
 });
 
-app.controller('user_ctrl', function ($scope, $resource, $location, $http, $route,User) {
-		console.log("user_ctrl");
-        console.log(User.nom);
-        console.log(User.isLoggedIn());
-        if(!User.isLoggedIn()){
-		     $location.url('/login');
-            }
+app.controller('user_ctrl', function ($scope, $resource, $location, $http, $route, User) {
+	console.log("user_ctrl");
+   console.log(User.nom);
+   console.log(User.isLoggedIn());
+   if(!User.isLoggedIn()){
+		$location.url('/login');
+   }
 
-        console.log("isVisible?: " + User.isAdmin());
-        $scope.isVisible = User.isAdmin();
-        
+   console.log("isVisible?: " + User.isAdmin());
+   $scope.options = {};
+   $scope.options.isVisible = User.isAdmin();
+   
 
-        $scope.date1 = new Date();
-        console.log("data: "+$scope.date1);
-  
-        $scope.isAdding = false;
-        $scope.reservat = false;
-        $scope.user = {};
-		$scope.user.nom = localStorage.user || "";
-       $scope.controls_fets = [
+   $scope.date1 = new Date();
+   console.log("data: "+$scope.date1);
+   
+   $scope.isAdding = false;
+   $scope.reservat = false;
+   $scope.user = {};
+	$scope.user.nom = localStorage.user || "";
+   $scope.controls_fets = [
 		{id:"1",tema:"maps",aula:"2.12", data:"24/05/2014"},
 		{id:"2",tema:"for",aula:"1.18", data:"14/04/2014"},
 		{id:"3",tema:"while",aula:"Per determinar", data:"8/03/2014"},
@@ -200,9 +200,9 @@ app.controller('user_ctrl', function ($scope, $resource, $location, $http, $rout
 
 	
 	$scope.onlyWeekdays = function(d) {
-  dayIndex = d.getDay();
-  return ((dayIndex != 0) && (dayIndex != 6));
-}
+      dayIndex = d.getDay();
+      return ((dayIndex != 0) && (dayIndex != 6));
+   }
 
 	$scope.proposats = [
 		{tema: "if/else", data:"30/05/2014"},
@@ -214,24 +214,24 @@ app.controller('user_ctrl', function ($scope, $resource, $location, $http, $rout
 	}
 
 	$scope.get_controls = function() {
-	console.log("controls demanats");
+	   console.log("controls demanats");
       $http.get('/getControls').
-      success(function(data) { 
-      	console.log(data);
-      	for(var i = 0; i < data.length; i++) {
-      		//if(d.getYear() >)
-      		//if(d.getMonth() > data[i][1].substring(3,5)){
-      		$scope.controls_per_fer.push({
-               tema: data[i].Tema, 
-               data: data[i].Data, 
-               aula: data[i].Aula,
-            });
-      	}
-      }).
-      error(function(){
-      	alert("els controls no s'han pogut carregar");
-      	console.log("controls demanats!!!!!!!!!");
-      });
+         success(function(data) { 
+      	   console.log(data);
+      	   for(var i = 0; i < data.length; i++) {
+      		   //if(d.getYear() >)
+      		   //if(d.getMonth() > data[i][1].substring(3,5)){
+      		   $scope.controls_per_fer.push({
+                  tema: data[i].Tema, 
+                  data: data[i].Data, 
+                  aula: data[i].Aula,
+               });
+      	   }
+         }).
+         error(function(){
+      	   alert("els controls no s'han pogut carregar");
+      	   console.log("controls demanats!!!!!!!!!");
+         });
 
 	}
 
@@ -246,25 +246,20 @@ app.controller('user_ctrl', function ($scope, $resource, $location, $http, $rout
 	}
 
 	$scope.temes_proposta =  [
-	{tema:"Getline + While cin"},
-	{tema:"Objectes + Strings"},
-	{tema:"Fitxers + StringStreams"},
-	{tema:"Vectors"},
-	{tema:"Iteradors"},
-	{tema:"Classes"},
-	{tema:"Maps"},
-	{tema:"Llistes"},
-	{tema:"Classes Compostes"},
-	{tema:"Eficiencia 1"},
-	{tema:"Operadors"},
-	{tema:"Eficiencia 2"},
+	   {tema:"Getline + While cin"},
+	   {tema:"Objectes + Strings"},
+	   {tema:"Fitxers + StringStreams"},
+	   {tema:"Vectors"},
+	   {tema:"Iteradors"},
+	   {tema:"Classes"},
+	   {tema:"Maps"},
+	   {tema:"Llistes"},
+	   {tema:"Classes Compostes"},
+	   {tema:"Eficiencia 1"},
+	   {tema:"Operadors"},
+	   {tema:"Eficiencia 2"},
 	];
   	
-
-	$scope.tema_proposta = function(index){
-		$scope.proposta.tema = $scope.temes_proposta[index].tema;
-	}
-
 	$scope.afegir_control = function() {
 		console.log("id adding: " + $scope.isAdding );
       if (!$scope.isAdding) {
@@ -276,55 +271,60 @@ app.controller('user_ctrl', function ($scope, $resource, $location, $http, $rout
       		while(afegit == false){
       			afegit = true;
       			console.log("bucleeeee");
-      		$scope.affControl.Id = Math.round(Math.random()*10000);
-      		$scope.affControl.Id = $scope.affControl.Id.toString();
-      		console.log($scope.affControl)
-      		console.log($scope.affControl.tema);
-      		$scope.cntrl = {};
-      		$scope.cntrl.tema = $scope.affControl.tema;
-      		$scope.cntrl.data = $scope.affControl.data;
-      		$scope.cntrl.aula = $scope.affControl.aula;
-      		$scope.cntrl.Id = $scope.affControl.Id;
-      		console.log($scope.cntrl);
-      		$http.post('/addControl',$scope.cntrl).
-		   success(function(data){
-			   console.log(data.stat);
-			   if(data.stat === "ok"){
-			   	console.log("if correcte");
-			   	afegit = true;
-			   	$scope.controls_per_fer.push({tema:$scope.affControl.tema, data:$scope.affControl.data, aula:$scope.affControl.aula, Id: $scope.affControl.Id});
-		$scope.isAdding = false;
-		console.log("Ara si que afegeixo");
-		$scope.affControl.tema = "";
-		$scope.affControl.aula = "";
-		$scope.affControl.data = "";
-			   } else if(data.stat = "SameData") {
-			   		alert("Examen repetit!");
-			   		afegit = true;
-			   	} else { 
-			   		console.log("mareix ID! repetimos?");
-					
-					}
+      		   $scope.affControl.Id = Math.round(Math.random()*10000);
+      		   $scope.affControl.Id = $scope.affControl.Id.toString();
+      		   console.log($scope.affControl)
+      		   console.log($scope.affControl.tema);
+      		   $scope.cntrl = {};
+      		   $scope.cntrl.tema = $scope.affControl.tema;
+      		   $scope.cntrl.data = $scope.affControl.data;
+      		   $scope.cntrl.aula = $scope.affControl.aula;
+      		   $scope.cntrl.Id = $scope.affControl.Id;
+      		   console.log($scope.cntrl);
+      		   $http.post('/addControl',$scope.cntrl).
+		            success(function(data){
+			            console.log(data.stat);
+			            if(data.stat === "ok"){
+			   	         console.log("if correcte");
+			   	         afegit = true;
+			   	         $scope.controls_per_fer.push({
+                           tema: $scope.affControl.tema, 
+                           data: $scope.affControl.data, 
+                           aula: $scope.affControl.aula, 
+                           Id: $scope.affControl.Id
+                        });
+		                  $scope.isAdding = false;
+		                  console.log("Ara si que afegeixo");
+		                  $scope.affControl.tema = "";
+		                  $scope.affControl.aula = "";
+		                  $scope.affControl.data = "";
+			            } else if(data.stat = "SameData") {
+			   		      alert("Examen repetit!");
+			   		      afegit = true;
+			   	      } else { 
+			   		      console.log("mareix ID! repetimos?");
+					         
+					      }
 
-		   }).error(function(){
-			   alert("error");
-		   });
-	}
-	
-		/*$scope.controls_per_fer.push({tema:$scope.affControl.tema, data:$scope.affControl.data, aula:$scope.affControl.aula, Id: $scope.affControl.Id});
-		$scope.isAdding = false;
-		console.log("Ara si que afegeixo");
-		$scope.affControl.tema = "";
-		$scope.affControl.aula = "";
-		$scope.affControl.data = "";*/
-		}
+		            }).error(function(){
+			            alert("error");
+		            });
+	         }
+	         
+		      /*$scope.controls_per_fer.push({tema:$scope.affControl.tema, data:$scope.affControl.data, aula:$scope.affControl.aula, Id: $scope.affControl.Id});
+		        $scope.isAdding = false;
+		        console.log("Ara si que afegeixo");
+		        $scope.affControl.tema = "";
+		        $scope.affControl.aula = "";
+		        $scope.affControl.data = "";*/
+		   }
          
          
       }
 	}
 
 	$scope.cancelar_affControl = function(){
-   		$scope.isAdding = false;
+   	$scope.isAdding = false;
    }
 
 	$scope.delete_exam = function(exam){
@@ -334,7 +334,7 @@ app.controller('user_ctrl', function ($scope, $resource, $location, $http, $rout
   		}  
 	}
 
-	});
+});
 
 app.controller('affAlumnes_ctrl', function ($scope, $resource, $location, $http, $route,User) {
 	
@@ -342,7 +342,7 @@ app.controller('affAlumnes_ctrl', function ($scope, $resource, $location, $http,
 	$scope.addUser.tipus = 0;
 	$scope.tipus = "Privilegis"
 	/*$scope.user = {};
-	$scope.user.nom = localStorage.user || "";*/
+	  $scope.user.nom = localStorage.user || "";*/
 	$scope.admin = function(){
 		console.log("Professor!!!");
 		$scope.tipus = "Professor";
@@ -392,7 +392,7 @@ app.controller('affAlumnes_ctrl', function ($scope, $resource, $location, $http,
 		} else {
 			$("#resposta_addUser").html("Aquest tipus d'usuari no existeix");
 			$("#resposta_addUser").css( "color", "red" );
-		  }
+		}
 	}
 }); 
 
