@@ -63,14 +63,14 @@ app.factory('User', function($http, $rootScope, $route, $location) {
 	} else{
 	   User.nom = localStorage.user || null;}
 
-	User.Admin = localStorage.visible || null;
+	User.Admin = localStorage.admin || null;
 	//User.isAdmin = false;
 
 	User.copyData = function(inf) {
-		console.log("noom: "+inf.nom+" , passwd: " +inf.passwd + ",  tipus: " +inf.tipus)
+		console.log("nom: "+inf.nom+" , passwd: " +inf.passwd + ",  tipus: " +inf.tipus)
       User.Admin = parseInt(inf.tipus);
       console.log("copyData admin:  " + User.Admin );
-      localStorage.visible = parseInt(inf.tipus);
+      localStorage.admin = parseInt(inf.tipus);
       //User.UserID   = data.User.UserID;
       //User.Contols = data.U
       User.nom = inf.nom;
@@ -173,44 +173,67 @@ app.controller('user_ctrl', function ($scope, $resource, $location, $http, $rout
 		$location.url('/login');
    }
 
-   console.log("isVisible?: " + User.isAdmin());
    $scope.options = {};
-   $scope.options.isVisible = User.isAdmin();
+   //$scope.options.isVisible = User.isAdmin();
+   $scope.options.isVisible = parseInt(localStorage.admin);
+   console.log("isVisible?: " + User.isAdmin());
+   console.log("isVisible?: " + $scope.options.isVisible);
    
-
-   $scope.date1 = new Date();
-   console.log("data: "+$scope.date1);
-   
-   $scope.isAdding = false;
-   $scope.reservat = false;
+  // $scope.isAdding = false;
+  // $scope.reservat = false;
    $scope.user = {};
 	$scope.user.nom = localStorage.user || "";
-   $scope.controls_fets = [
-		{id:"1",tema:"maps",aula:"2.12", data:"24/05/2014"},
-		{id:"2",tema:"for",aula:"1.18", data:"14/04/2014"},
-		{id:"3",tema:"while",aula:"Per determinar", data:"8/03/2014"},
-	];
-	//$scope.controls_fets = [];
+   $scope.controls_fets = [];
 	$scope.controls_per_fer =[];
 	$scope.affControl = {};
+	$scope.cntrl = {};
 	$scope.affControl.tema ="";
-	$scope.affControl.data ="";
+	$scope.affControl.data = "";
 	$scope.affControl.aula ="";
 	$scope.affControl.Id ="";
 
-	
+	$scope.reservats = [];
+	/*$scope.reservats.push({
+              	id_control: "data[i].Id_control", 
+                nom_user: "data[i].Nom_user",
+      	   	});*/
+
+ $scope.editar_Control = false;
+
+    $scope.editar = function (index) {
+        $scope.editar_Control = true;
+        $scope.index_editar = index;
+    };
+
+    $scope.afegir_Control = false;
+
+    $scope.afegir = function () {
+    	console.log("afegir");
+        $scope.afegir_Control = true;
+    };
+
 	$scope.onlyWeekdays = function(d) {
       dayIndex = d.getDay();
       return ((dayIndex != 0) && (dayIndex != 6));
    }
-
+   	$scope.apuntarExamen = [];
 	$scope.proposats = [
 		{tema: "if/else", data:"30/05/2014"},
 		{tema: "for", data:"28/05/2014"},
 	];
 
-	$scope.reservar_control = function(indx){
-		$scope.reservat = !$scope.reservat;
+	$scope.reservar_control = function(index){
+		$scope.apuntarExamen.Id = $scope.controls_per_fer[index].Id;
+		$scope.apuntarExamen.nom = User.getUserName();
+		$http.post('/reservarControl',$scope.apuntarExamen).
+		   success(function(data){
+		   	alert("T'has apuntat correctament");
+		   	$("#"+index).attr('value', 'apuntat');
+			$("#"+index).css( "background-color", "green" );
+		   }).error(function(){
+			   alert("Error al apuntar-se");
+		   });
+		
 	}
 
 	$scope.get_controls = function() {
@@ -219,25 +242,70 @@ app.controller('user_ctrl', function ($scope, $resource, $location, $http, $rout
          success(function(data) { 
       	   console.log(data);
       	   for(var i = 0; i < data.length; i++) {
-      		   //if(d.getYear() >)
-      		   //if(d.getMonth() > data[i][1].substring(3,5)){
-      		   $scope.controls_per_fer.push({
-                  tema: data[i].Tema, 
-                  data: data[i].Data, 
-                  aula: data[i].Aula,
-               });
-      	   }
+      		   	var a = new Date();
+      		   	if(a.getTime() <= data[i].Data){
+      		   		a.setTime(data[i].Data);
+      		   		$scope.controls_per_fer.push({
+                  	tema: data[i].Tema, 
+                  	data: a, 
+                  	aula: data[i].Aula,
+                  	Id: data[i].Id,
+               	});
+      			} else {
+      		   		a.setTime(data[i].Data);
+      		   		$scope.controls_fets.push({
+                  	tema: data[i].Tema, 
+                  	data: a, 
+                  	aula: data[i].Aula,
+                  	Id: data[i].Id,
+               		});
+                   }
+      	   	}
          }).
          error(function(){
       	   alert("els controls no s'han pogut carregar");
       	   console.log("controls demanats!!!!!!!!!");
          });
-
 	}
 
-	$scope.get_controls();
+
+	$scope.get_reserves = function() {
+	   console.log("reserves demanades");
+      $http.get('/getReserves').
+         success(function(data) { 
+      	   console.log(data);
+      	   console.log("nom user data: "+data[0].Nom_user);
+      	   for(var i = 0; i < data.length; i++) {
+      		   	$scope.reservats.push({
+              	id_control: data[i].Id_control, 
+                nom_user: data[i].Nom_user,
+      	   	});
+      	   }
+        }).
+         error(function(){
+      	   alert("les reserves no s'han pogut carregar");
+         });
+					console.log($scope.reservats);
+		for(var e = 0; i < $scope.reservats.length;i++){
+			for(var i = 0; i< $scope.controls_per_fer.length;i++){
+				if($scope.reservats[e].nom_user == User.getUserName){
+					console.log("bucleee2");
+					if($scope.reservats[e].id_control == $scope.controls_per_fer[i]){
+							$("#"+i).attr('value', 'apuntat');
+							$("#"+i).css( "background-color", "green" );
+					}
+				}
+			}
+		} 
+	}
+		
+	$scope.get_reserves();
+
+	
+	$scope.get_controls();	
 
 
+	
 	$scope.proposta = {};
 	$scope.proposta.tema ="tema";
 	$scope.add_proposta = function(){
@@ -261,11 +329,6 @@ app.controller('user_ctrl', function ($scope, $resource, $location, $http, $rout
 	];
   	
 	$scope.afegir_control = function() {
-		console.log("id adding: " + $scope.isAdding );
-      if (!$scope.isAdding) {
-         $scope.isAdding = true;
-         console.log($scope.date1.getDay());
-      } else {
       	if($scope.affControl.tema !="" && $scope.affControl.data !="" && $scope.affControl.aula != ""){
       		var afegit = false;
       		while(afegit == false){
@@ -275,12 +338,13 @@ app.controller('user_ctrl', function ($scope, $resource, $location, $http, $rout
       		   $scope.affControl.Id = $scope.affControl.Id.toString();
       		   console.log($scope.affControl)
       		   console.log($scope.affControl.tema);
-      		   $scope.cntrl = {};
       		   $scope.cntrl.tema = $scope.affControl.tema;
-      		   $scope.cntrl.data = $scope.affControl.data;
+      		   $scope.cntrl.data = $scope.affControl.data.getTime().toString();
       		   $scope.cntrl.aula = $scope.affControl.aula;
       		   $scope.cntrl.Id = $scope.affControl.Id;
       		   console.log($scope.cntrl);
+      		  // $scope.variable = {tema:"funcionaa?",aula:"pliiiis",data:"1400953473838",Id:"857865"};
+      		   console.log("enviant?");
       		   $http.post('/addControl',$scope.cntrl).
 		            success(function(data){
 			            console.log(data.stat);
@@ -310,22 +374,9 @@ app.controller('user_ctrl', function ($scope, $resource, $location, $http, $rout
 			            alert("error");
 		            });
 	         }
-	         
-		      /*$scope.controls_per_fer.push({tema:$scope.affControl.tema, data:$scope.affControl.data, aula:$scope.affControl.aula, Id: $scope.affControl.Id});
-		        $scope.isAdding = false;
-		        console.log("Ara si que afegeixo");
-		        $scope.affControl.tema = "";
-		        $scope.affControl.aula = "";
-		        $scope.affControl.data = "";*/
 		   }
-         
-         
-      }
 	}
 
-	$scope.cancelar_affControl = function(){
-   	$scope.isAdding = false;
-   }
 
 	$scope.delete_exam = function(exam){
 		var r = confirm("Estàs segur?");
@@ -409,4 +460,101 @@ app.directive("proposar", function() {
       restrict: "E",
       templateUrl: 'proposar.html'
    };
+});
+
+
+
+app.directive('editarControl', function () {
+    return {
+        restrict: 'E',
+        replace: true,
+        template: '<div>' +
+'  <div class="modal fade" id="loginModal" tabindex="-1" + role = "dialog" aria-labelledby = "myModalLabel" aria-hidden = "true" > ' +
+'    <div class = "modal-dialog" > ' +
+'      <form name = "form" ng - submit = "submit()" > ' +
+'        <div class = "modal-content" >' +
+'          <div style="background-color:#F1BF4C;"  class = "modal-header" > <h2>Editar control</h2> ' +
+'            <button type="button" class = "close" data-dismiss="modal" aria-hidden="true" ng-click="cancelar()" > Cancel </button>' +
+'              <h3> </h3 > ' +
+'          </div>' +
+'          <div class="modal-body">' +
+'            <table border="0"><tr><td>tema: </td><td><select" ng-model="affControl.tema" ng-options="t.tema for t in temes_proposta"></select></td></tr> ' +
+'            <tr><td>Aula: </td><td><input type = "text" ng-model = "controls_per_fer[index_editar].aula" > </input></td></tr>' +
+'            <tr><td>Data: </td><td><quick-datepicker ng-model="j"></quick-datepicker></td></tr>' +
+'            <tr><td colsp an="2"><input type="submit" class="btn btn-primary" id="submit" ng-click="submit()" value="Acceptar"></input ></td></tr></table> ' +
+'          </div>' +
+'        </div > ' +
+'      </form>' +
+'    </div > ' +
+'  </div>' +
+'</div > ',
+        controller: function ($scope) {
+            
+            $scope.submit = function() {
+                $scope.login();
+		        $("#loginModal").modal('hide');
+            };
+            
+            $scope.cancelar = function() {
+            	console.log("cancel");
+                $scope.editar_Control = false;
+		        $("#loginModal").modal('hide');
+            };
+            
+            $scope.$watch('editar_Control', function() {
+                if ($scope.editar_Control) {
+		            $("#loginModal").modal('show');
+                };
+           });   
+        }
+    };
+});
+
+
+
+
+app.directive('afegirControl', function () {
+    return {
+        restrict: 'E',
+        replace: true,
+        template: '<div>' +
+'  <div class="modal fade" id="afegirModal" tabindex="-1" + role = "dialog" aria-labelledby = "myModalLabel" aria-hidden = "true" > ' +
+'    <div class = "modal-dialog" > ' +
+'      <form name = "form" ng - submit = "submit()" > ' +
+'        <div class = "modal-content" >' +
+'          <div style="background-color:#39DC3D;"  class = "modal-header" > <h2>Afegir control</h2> ' +
+'            <button type="button" class = "close" data-dismiss="modal" aria-hidden="true" ng-click="cancel()" > Cancel </button>' +
+'              <h3> </h3 > ' +
+'          </div>' +
+'          <div class="modal-body">' +
+'            <table border="0"><tr><td>tema: </td><td><select ng-model="affControl" ng-options=" t.tema for t in temes_proposta"></select></td></tr> ' +
+'            <tr><td>Aula: </td><td><input type = "text" ng-model = "affControl.aula" > </input></td></tr>' +
+'            <tr><td>Data: </td><td><quick-datepicker ng-model="affControl.data"></quick-datepicker></td></tr>' +
+'            <tr><td colsp an="2"><input type="submit" class="btn btn-primary" id="submit" ng-click="submit()" value="Acceptar"></input ></td></tr></table> ' +
+'          </div>' +
+'        </div > ' +
+'      </form>' +
+'    </div > ' +
+'  </div>' +
+'</div > ',
+        controller: function ($scope) {
+            
+            $scope.submit = function() {
+                $scope.afegir_control();
+                $scope.afegir_Control = false;
+		        $("#afegirModal").modal('hide');
+            };
+            
+            $scope.cancel = function() {
+                $scope.afegir_Control = false;
+		        $("#afegirModal").modal('hide');
+            };
+            
+            $scope.$watch('afegir_Control', function() {
+                if ($scope.afegir_Control) {
+		            $("#afegirModal").modal('show');
+                };
+           });   
+        }
+    };
 });

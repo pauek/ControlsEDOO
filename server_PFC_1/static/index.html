@@ -7,16 +7,16 @@
 		<link rel="stylesheet" type="text/css" href="resources/format.css" />
 		<link rel="stylesheet" type="text/css" href="resources/ng-quick-date.css" media="all">
 		<link rel="stylesheet" type="text/css" href="resources/ng-quick-date-default-theme.css" media="all">
+		<!-- Latest compiled and minified JavaScript -->
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular-route.min.js"></script>
    		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular-resource.min.js"></script>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-		<!-- Latest compiled and minified JavaScript -->
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="js/ng-quick-date.js" ></script>
 		<script type="text/javascript" src="js/main.js" ></script>
 
-		<title>login</title>
+		<title>Reseva de controls</title>
 </head>
 <body ng-app="angular_app">
   	<div id="navigation">
@@ -27,14 +27,9 @@
   			<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
   				<li ng-repeat="items in menu" ng-show="items.visible.isAdmin()"><a class="items_menu" href={{items.link}} >{{items.name}}</a></li>
   				<li><a class="items_menu" ng-click="login_out()"  href="">Tancar sessió</a></li>
-   				 <!-- <li><a href="">hola</a></li>
-   				 <li ng-show={{isVisible}}><a href="/afegir_alumnes">Afegir alumnes</a></li>
-   				 <li><a ng-click="login_out()" href="#">Tancar sessió</a></li> -->
    				</ul>
 			</div>
 		</div>
-			<!-- <h3 ng-click="menu_user()">{{user.nom}}</h3>
-		</div> -->
 	</div>
   <ng-view></ng-view>
 </body>

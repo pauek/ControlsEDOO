@@ -3,21 +3,19 @@
   		<h3>Controls programats</h3>
   		<div>
   			Per fer
-        <datepicker ng-model='date1' 
-                    icon-class='fa fa-calendar' 
-                    label-format='EEEE, MMMM d, yyyy'></datepicker>
-  			<table class="programats" style="width: 70em">
+  			<table class="programats" style="width: 80em">
 	 		<tr>
 				<th><h4>Examen</h4></th>
 				<th><h4>Aula</h4></th>
 				<th><h4>Data</h4></th>
 	 		</tr>
-	 		<tr class="per_fer"  ng-repeat="c in controls_per_fer track by $index">
-				<td><input type="text" id="" ng-hide="true"><span contenteditable="true" id="span">{{c.tema}}</span></input></td> 
-				<td><input type="text" id="" ng-hide="true"><span id="span">{{c.aula}}</span></input></td>
-				<td><input type="text" id="" ng-hide="true"><span id="span">{{c.data}}</span></input></td>
+	 		<tr class="per_fer"  ng-repeat="c in controls_per_fer track by $index" href="/login">
+				<td style="width: 20em"><input type="text" id="" ng-hide="true"><span id="span">{{c.tema}}</span></input></td> 
+				<td style="width: 20em"><input type="text" id="" ng-hide="true"><span id="span">{{c.aula}}</span></input></td>
+        <td style="width: 20em"><quick-datepicker ng-model='c.data' date-filter='onlyWeekdays' date-format="EEEE, MMMM d, yyyy" time-format="hh:mm" ></quick-datepicker></td>
+				<!-- <td><input type="text" id="" ng-hide="true"><span id="span">{{c.data}}</span></input></td> -->
 				<td class="button_pen">
-              <button type="button" ng-show="options.isVisible" class="button_pen" ng-click="" class="btn btn-default btn-lg" >
+              <button type="button" ng-show="options.isVisible" class="button_pen" ng-click="editar($index)" class="btn btn-default btn-lg" >
                 <span class="glyphicon glyphicon-pencil"></span>
               </button>
             </td>
@@ -27,34 +25,27 @@
               </button>
             </td>
           <td class="button_pen">
-            <button ng-click="reservar_control($index)" ng-show="options.isVisible == 0">Reservar</button>
-            <span ng-show="reservat">Apuntat</span>
+            <input type="button" id="{{$index}}" ng-click="reservar_control($index)" value="Apuntar-se" ng-show="!options.isVisible"></input>
           </td>
 			</tr>
+      <editar-control></editar-control>
 			<tr>
-			  <td>
-             <input type="text" class="af_Cntrl" ng-show="isAdding" ng-model="affControl.tema" placeholder="Tema">
-           </td>
-			  <td>
-             <input type="text" class="af_Cntrl" ng-show="isAdding" ng-model="affControl.aula" placeholder="Aula">
-           </td>
-           <td>
-             <input type="text" class="af_Cntrl" ng-show="isAdding" ng-model="affControl.data" placeholder="Data">
-           </td>
-           <td><quick-datepicker ng-model='date1'></quick-datepicker></td>
-           <td colspan="2">
-             <button ng-click="afegir_control()" ng-show="options.isVisible">afegir control</button>
-             <button ng-click="cancelar_affControl()" ng-show="isAdding">Cancelar</button>
-           </td>
-         </tr>
-         <tr style="height: 1em"></tr>
+			  <td></td>
+			  <td></td>
+        <td></td>
+        <td colspan="2">
+             <button ng-click="afegir()" ng-show="options.isVisible">afegir control</button>
+        </td>
+      </tr>
+      <afegir-control></afegir-control>
+      <tr style="height: 1em"></tr>
 			<tr class="fets"  ng-repeat="c in controls_fets track by $index">
-			  <td><input type="text" id="1" class="{{$index}}" ng-hide="true"><span id="span">{{c.tema}}</span></input></td> 
-			  <td><input type="text" id="2" ng-hide="true"><span id="span">{{c.aula}}</span></input></td>
-			  <td><input type="text" id="3"ng-hide="true"><span id="span" class="{{$index}}">{{c.data}}</span></input></td>
+			  <td style="width: 20em"><input type="text" id="" ng-hide="true"><span id="span">{{c.tema}}</span></input></td> 
+        <td style="width: 20em"><input type="text" id="" ng-hide="true"><span id="span">{{c.aula}}</span></input></td>
+        <td style="width: 20em"><quick-datepicker ng-model='c.data' date-filter='onlyWeekdays' date-format="EEEE, MMMM d, yyyy" time-format="hh:mm" ></quick-datepicker></td>
 			</tr>
   		</table>
 	</div>
 	<proposats ng-show="options.isVisible"></proposats>
-   <proposar ng-show="!options.isVisible"></proposar>
+  <proposar ng-show="!options.isVisible"></proposar>
 </div>

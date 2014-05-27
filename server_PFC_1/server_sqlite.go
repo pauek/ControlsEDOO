@@ -25,8 +25,8 @@ func crearBBDD(crear bool) {
 
 		defer db.Close()
 
-		db.Exec("CREATE TABLE controls (tema TEXT, aula TEXT, data TEXT, id_control TEXT);")
-		db.Exec("CREATE TABLE proposats (tema TEXT, data TEXT, alumne TEXT);")
+		db.Exec("CREATE TABLE controls (tema TEXT, aula TEXT, data INTEGER, id_control TEXT);")
+		db.Exec("CREATE TABLE proposats (tema TEXT, data INTEGER, alumne TEXT);")
 		db.Exec("CREATE TABLE usuaris (nom TEXT, password TEXT, tipus TEXT, id_alumne TEXT);")
 		db.Exec("CREATE TABLE temes (tema TEXT, aula TEXT, data TEXT);")
 		db.Exec("CREATE TABLE inscrits (id_alumne TEXT, id_control TEXT);")
@@ -39,8 +39,14 @@ func crearBBDD(crear bool) {
 		db.Exec("insert into usuaris(nom, password, tipus) values('pau.fernandez', '1234', '1');")
 		db.Exec("insert into usuaris(nom, password, tipus) values('admin', '1234', '1');")
 
-		db.Exec("insert into controls(tema, aula, data,id_control) values('Objectes + Strings', '2.18', '19/05/2014','21434');")
-		db.Exec("insert into controls(tema, aula, data, id_control) values('Getline + While cin', '1.08', '25/05/2014','49382');")
+		db.Exec("insert into controls(tema, aula, data,id_control) values('Objectes + Strings', '2.18', 0000950612511, 21434);")
+		db.Exec("insert into controls(tema, aula, data, id_control) values('Getline + While cin', '1.08', 1400953473838, 49382);")
+		db.Exec("insert into controls(tema, aula, data,id_control) values('Vectors', '2.18', 1401839340904, 31412);")
+		db.Exec("insert into controls(tema, aula, data,id_control) values('Operadors', '2.18', 0000950612511, 36715);")
+
+		db.Exec("insert into inscrits(id_alumne, id_control) values('marc', '21434');")
+		db.Exec("insert into inscrits(id_alumne, id_control) values('marc', '31412');")
+		//db.Exec("insert into inscrits(id_alumne, id_control) values('marc', '');")
 		log.Println("insert")
 		/*if err != nil {
 
@@ -184,7 +190,12 @@ func hAddControl(w http.ResponseWriter, r *http.Request) {
 			log.Fatal(err)
 		}
 		if match == false {
-			db.Exec("insert into controls(tema, aula, data,id_control) values('" + req["tema"] + "', '" + req["aula"] + "','" + req["data"] + "','" + req["Id"] + "');")
+			log.Println("CONTROL GUARDAT ")
+			log.Println("tema" + req["tema"])
+			log.Println("aula" + req["aula"])
+			log.Println("data" + req["data"])
+			log.Println("Id" + req["Id"])
+			db.Exec("insert into controls(tema, aula, data,id_control) values('" + req["tema"] + "', '" + req["aula"] + "'," + req["data"] + "	,'" + req["Id"] + "');")
 			stat = "ok"
 		} else {
 			stat = "SameData"
@@ -199,8 +210,8 @@ func hAddControl(w http.ResponseWriter, r *http.Request) {
 }
 
 type Control struct {
-	Tema, Data, Aula string
-	Id               int
+	Tema, Aula string
+	Id, Data   int
 }
 
 func hGetControls(w http.ResponseWriter, r *http.Request) {
@@ -236,6 +247,81 @@ func hGetControls(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(req)
 }
 
+type Reserva struct {
+	Id_control, Nom_user string
+}
+
+func hGetReserves(w http.ResponseWriter, r *http.Request) {
+	log.Println("GetReserves")
+	req := []Reserva{}
+
+	db, err := sql.Open("sqlite3", "./BBDD.db")
+	if err != nil {
+		fmt.Printf("open: %v\n", err)
+		return
+	}
+
+	defer db.Close()
+
+	stm, err := db.Query("select * from inscrits")
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("reserves_paso1")
+	for stm.Next() {
+		rsrva := Reserva{}
+		if err := stm.Scan(&rsrva.Nom_user, &rsrva.Id_control); err != nil {
+			log.Fatal(err)
+		}
+		log.Println(rsrva.Id_control)
+		req = append(req, rsrva)
+	}
+	log.Println("reserves_paso2")
+	if err := stm.Err(); err != nil {
+		log.Fatal(err)
+	}
+	log.Println("req id: " + req[0].Id_control)
+	log.Println("req nom: " + req[0].Nom_user)
+	log.Println("req id2: " + req[1].Id_control)
+	log.Println("req nom2: " + req[1].Nom_user)
+	json.NewEncoder(w).Encode(req)
+}
+
+func hReservarControl(w http.ResponseWriter, r *http.Request) {
+	/*log.Println("hReservarControl")
+	//req := struct{ Title string }{}
+	req := make(map[string]string)
+	json.NewDecoder(r.Body).Decode(&req)
+	log.Println("adeu1")
+
+	db, err := sql.Open("sqlite3", "./BBDD.db")
+	if err != nil {
+		fmt.Printf("open: %v\n", err)
+		return
+	}
+
+	defer db.Close()
+
+	res, err := db.Query("select * from inscrits where nid_alumne =" + req["nom"])
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("paso1")
+	for res.Next() {
+		ctrl := Control{}
+		if err := res.Scan(&ctrl.Tema, &ctrl.Aula, &ctrl.Data, &ctrl.Id); err != nil {
+			log.Fatal(err)
+		}
+		log.Println(ctrl.Tema)
+		req = append(req, ctrl)
+	}
+	log.Println("paso2")
+	if err := res.Err(); err != nil {
+		log.Fatal(err)
+	}
+	json.NewEncoder(w).Encode(req)*/
+}
+
 func main() {
 
 	r := mux.NewRouter()
@@ -247,6 +333,10 @@ func main() {
 	http.Handle("/getControls", r)
 	r.HandleFunc("/addControl", hAddControl).Methods("POST")
 	http.Handle("/addControl", r)
+	r.HandleFunc("/reservarControl", hReservarControl).Methods("POST")
+	http.Handle("/reservarControl", r)
+	r.HandleFunc("/getReserves", hGetReserves).Methods("GET")
+	http.Handle("/getReserves", r)
 	crearBBDD(true)
 
 	//db.Exec("INSERT INTO  alumnes (nom, login) VALUES ('Marc Andrés Fontanet','marc.andres.fontanet');")
