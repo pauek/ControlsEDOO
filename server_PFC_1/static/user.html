@@ -1,51 +1,47 @@
-<div>
-	<div id="div_programats">
+<div id="div_programats">
   		<h3>Controls programats</h3>
   		<div>
-  			Per fer
-  			<table class="programats" style="width: 80em">
-	 		<tr>
-				<th><h4>Examen</h4></th>
-				<th><h4>Aula</h4></th>
-				<th><h4>Data</h4></th>
-	 		</tr>
-	 		<tr class="per_fer"  ng-repeat="c in controls_per_fer track by $index" href="/login">
-				<td style="width: 20em"><input type="text" id="" ng-hide="true"><span id="span">{{c.tema}}</span></input></td> 
-				<td style="width: 20em"><input type="text" id="" ng-hide="true"><span id="span">{{c.aula}}</span></input></td>
-        <td style="width: 20em"><quick-datepicker ng-model='c.data' date-filter='onlyWeekdays' date-format="EEEE, MMMM d, yyyy" time-format="hh:mm" ></quick-datepicker></td>
-				<!-- <td><input type="text" id="" ng-hide="true"><span id="span">{{c.data}}</span></input></td> -->
-				<td class="button_pen">
-              <button type="button" ng-show="options.isVisible" class="button_pen" ng-click="editar($index)" class="btn btn-default btn-lg" >
-                <span class="glyphicon glyphicon-pencil"></span>
-              </button>
-            </td>
-			   <td class="button_pen">
-              <button type="button" ng-show="options.isVisible" class="button_pen edit_button btn btn-default btn-lg"  ng-click="delete_exam($index)" >
+  			</div>
+  <ul style="list-style-type:none;">
+    Controls per fer
+    <li id="head_table" style="width:20em;">
+      <span style="border:1px solid red; width:200em;">Examen</span>
+      <span style="width:20em">Aula</span>
+      <span style="width:20em">Data</span>
+    </li>
+    <li class="per_fer" style="border:1px solid red; width:60em;" ng-repeat="c in controls_per_fer track by $index">
+      <span>{{c.tema}}</span>
+      <span>{{c.aula}}</span>
+      <span><quick-datepicker class="date" ng-model='c.data' date-filter='onlyWeekdays' date-format="EEEE, MMMM d, yyyy" time-format="hh:mm" ></quick-datepicker></span>
+      <span class="button_pen"><button type="button" ng-show="options.isVisible" class="button_pen" ng-click="inscrits_control($index)" class="btn btn-default btn-lg" >
+      <span class="glyphicon glyphicon-list-alt"></span>
+      </button></span>
+      <span class="button_pen"><button type="button" ng-show="options.isVisible" class="button_pen" ng-click="editar($index)" class="btn btn-default btn-lg" >
+      <span class="glyphicon glyphicon-pencil"></span>
+      </button></span>
+      <span class="button_pen"><button type="button" ng-show="options.isVisible" class="button_pen edit_button btn btn-default btn-lg"  ng-click="delete_exam($index)" >
                 <span class="glyphicon glyphicon-remove"></span>
-              </button>
-            </td>
-          <td class="button_pen">
-            <input type="button" id="{{$index}}" ng-click="reservar_control($index)" value="Apuntar-se" ng-show="!options.isVisible"></input>
-          </td>
-			</tr>
-      <editar-control></editar-control>
-			<tr>
-			  <td></td>
-			  <td></td>
-        <td></td>
-        <td colspan="2">
-             <button ng-click="afegir()" ng-show="options.isVisible">afegir control</button>
-        </td>
-      </tr>
-      <afegir-control></afegir-control>
-      <tr style="height: 1em"></tr>
-			<tr class="fets"  ng-repeat="c in controls_fets track by $index">
-			  <td style="width: 20em"><input type="text" id="" ng-hide="true"><span id="span">{{c.tema}}</span></input></td> 
-        <td style="width: 20em"><input type="text" id="" ng-hide="true"><span id="span">{{c.aula}}</span></input></td>
-        <td style="width: 20em"><quick-datepicker ng-model='c.data' date-filter='onlyWeekdays' date-format="EEEE, MMMM d, yyyy" time-format="hh:mm" ></quick-datepicker></td>
-			</tr>
-  		</table>
+              </button></span>
+              <span><input type="button" id="{{$index}}" ng-click="reservar_control($index)" value="Apuntar-se" ng-show="!options.isVisible"></input></span>
+    </li>
+    <li>
+
+    </li><span><button ng-click="afegir()" ng-show="options.isVisible">afegir control</button></span>
+    <editar-control></editar-control>
+    <afegir-control></afegir-control>
+    <veure-inscrits></veure-inscrits>
+    <br><br><br>
+    Controls fets
+    <li id="head_table" style="width:20em;">
+      <span style="border:1px solid red; width:200em;">Examen</span>
+      <span style="width:20em">Data</span>
+    </li>
+    <li class="fets" style="border:1px solid red; width:60em;" ng-repeat="c in controls_fets track by $index">
+      <span>{{c.tema}}</span>
+      <span><quick-datepicker ng-model='c.data' date-filter='onlyWeekdays' date-format="EEEE, MMMM d, yyyy" time-format="hh:mm" ></quick-datepicker></span>
+    </li>
+  </ul>
 	</div>
-	<proposats ng-show="options.isVisible"></proposats>
+	<proposats ng-show="!options.isVisible"></proposats>
   <proposar ng-show="!options.isVisible"></proposar>
 </div>

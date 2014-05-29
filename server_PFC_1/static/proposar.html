@@ -2,7 +2,7 @@
   <br><br><br><br>
   <h2>Proposar Control</h2>
   <form ng-submit="add_proposta()">
-    <select placeholder="escull tema" ng-model="proposta" ng-options="t.tema for t in temes_proposta"></select>
+    <select placeholder="escull tema" ng-model="tema_proposta" ng-options="t.tema for t in temes_proposta"></select>
     <br><br>
     <quick-datepicker ng-model='proposta.data' date-filter='onlyWeekdays' disable-timepicker="true"></quick-datepicker>
     <br><br><br>

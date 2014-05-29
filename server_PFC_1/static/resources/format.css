@@ -22,7 +22,8 @@ background-color: #000;
 	position: absolute;
 	margin-top: 10px;
 	margin-right: 10px; 
-	background-color: #000;
+	background-color: #AB4028;
+	width: 250px;
 	/*height: 0px;*/
 }
 #navigation_user a{
@@ -32,16 +33,16 @@ color: #3373DF;
 }
 #navigation_user h3{
 /*font-family: 2em Arial, Helvetica;*/
-width: 250px;
+width: 177px;
 text-align: center;
 }
 
 #navigation_user ul{
-	background-color: #000;
-	position: relative;
+	background-color: #AB4028;
+	/*position: relative;*/
 	/*z-index: 100 !important;*/
 	width: 250px;
-	padding: 0px;
+	/*padding: 0px;*/
 }
 
 #navigation_user ul li{
@@ -91,6 +92,15 @@ table.programats > tbody > tr > th {
 	text-align: center;
 }
 
+#head_table span{
+	border-radius: 15px;
+	background-color: #1CCAEC;
+	color: #CCC;
+	/*border: 2px solid black;*/
+	font-size: 1.5em;
+	text-align: center;
+}
+
 #div_proposats{
 	margin-top: 100px;
 }
@@ -112,4 +122,8 @@ h4{
 .fets{
 	background-color: yellow;
 	border-radius: 15px;
+}
+
+.date{
+	margin-bottom: 8px;
 }

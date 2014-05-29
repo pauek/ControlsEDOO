@@ -26,7 +26,7 @@ func crearBBDD(crear bool) {
 		defer db.Close()
 
 		db.Exec("CREATE TABLE controls (tema TEXT, aula TEXT, data INTEGER, id_control TEXT);")
-		db.Exec("CREATE TABLE proposats (tema TEXT, data INTEGER, alumne TEXT);")
+		db.Exec("CREATE TABLE proposats (tema TEXT, data TEXT, alumne TEXT);")
 		db.Exec("CREATE TABLE usuaris (nom TEXT, password TEXT, tipus TEXT, id_alumne TEXT);")
 		db.Exec("CREATE TABLE temes (tema TEXT, aula TEXT, data TEXT);")
 		db.Exec("CREATE TABLE inscrits (id_alumne TEXT, id_control TEXT);")
@@ -38,15 +38,19 @@ func crearBBDD(crear bool) {
 		db.Exec("insert into usuaris(nom, password, tipus) values('alumne', '1234', '0');")
 		db.Exec("insert into usuaris(nom, password, tipus) values('pau.fernandez', '1234', '1');")
 		db.Exec("insert into usuaris(nom, password, tipus) values('admin', '1234', '1');")
+		db.Exec("insert into usuaris(nom, password, tipus) values('marc', '1234', '0');")
 
 		db.Exec("insert into controls(tema, aula, data,id_control) values('Objectes + Strings', '2.18', 0000950612511, 21434);")
-		db.Exec("insert into controls(tema, aula, data, id_control) values('Getline + While cin', '1.08', 1400953473838, 49382);")
+		db.Exec("insert into controls(tema, aula, data, id_control) values('Getline + While cin', '1.08', 1408953473838, 49382);")
 		db.Exec("insert into controls(tema, aula, data,id_control) values('Vectors', '2.18', 1401839340904, 31412);")
 		db.Exec("insert into controls(tema, aula, data,id_control) values('Operadors', '2.18', 0000950612511, 36715);")
 
 		db.Exec("insert into inscrits(id_alumne, id_control) values('marc', '21434');")
-		db.Exec("insert into inscrits(id_alumne, id_control) values('marc', '31412');")
-		//db.Exec("insert into inscrits(id_alumne, id_control) values('marc', '');")
+		db.Exec("insert into inscrits(id_alumne, id_control) values('carles', '31412');")
+		db.Exec("insert into inscrits(id_alumne, id_control) values('roger', '31412');")
+		db.Exec("insert into inscrits(id_alumne, id_control) values('enric', '48937');")
+		db.Exec("insert into inscrits(id_alumne, id_control) values('anna', '31412');")
+		db.Exec("insert into inscrits(id_alumne, id_control) values('marta', '31412');")
 		log.Println("insert")
 		/*if err != nil {
 
@@ -287,12 +291,13 @@ func hGetReserves(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(req)
 }
 
-func hReservarControl(w http.ResponseWriter, r *http.Request) {
-	/*log.Println("hReservarControl")
-	//req := struct{ Title string }{}
-	req := make(map[string]string)
-	json.NewDecoder(r.Body).Decode(&req)
-	log.Println("adeu1")
+type Proposta struct {
+	Tema, Data, Nom string
+}
+
+func hGetPropostes(w http.ResponseWriter, r *http.Request) {
+	log.Println("GetPropostes")
+	req := []Proposta{}
 
 	db, err := sql.Open("sqlite3", "./BBDD.db")
 	if err != nil {
@@ -302,24 +307,100 @@ func hReservarControl(w http.ResponseWriter, r *http.Request) {
 
 	defer db.Close()
 
-	res, err := db.Query("select * from inscrits where nid_alumne =" + req["nom"])
+	stm, err := db.Query("select * from proposats")
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("paso1")
-	for res.Next() {
-		ctrl := Control{}
-		if err := res.Scan(&ctrl.Tema, &ctrl.Aula, &ctrl.Data, &ctrl.Id); err != nil {
+	log.Println("proposats_paso1")
+	for stm.Next() {
+		prop := Proposta{}
+		if err := stm.Scan(&prop.Tema, &prop.Data, &prop.Nom); err != nil {
 			log.Fatal(err)
 		}
-		log.Println(ctrl.Tema)
-		req = append(req, ctrl)
+		//log.Println(rsrva.Id_control)
+		req = append(req, prop)
 	}
-	log.Println("paso2")
-	if err := res.Err(); err != nil {
+	log.Println("reserves_paso2")
+	if err := stm.Err(); err != nil {
 		log.Fatal(err)
 	}
-	json.NewEncoder(w).Encode(req)*/
+
+	if len(req) == 0 {
+		json.NewEncoder(w).Encode("BUIT")
+	} else {
+		json.NewEncoder(w).Encode(req)
+	}
+	/*log.Println("req id: " + req[0].Id_control)
+	log.Println("req nom: " + req[0].Nom_user)
+	log.Println("req id2: " + req[1].Id_control)
+	log.Println("req nom2: " + req[1].Nom_user)*/
+
+}
+
+func hReservarControl(w http.ResponseWriter, r *http.Request) {
+	log.Println("hReservarControl")
+	//req := struct{ Title string }{}
+	var result = ""
+	req := make(map[string]string)
+	json.NewDecoder(r.Body).Decode(&req)
+	log.Println("adeu1")
+	log.Println("nom" + req["nom"])
+	log.Println("Id" + req["Id"])
+
+	db, err := sql.Open("sqlite3", "./BBDD.db")
+	if err != nil {
+		fmt.Printf("open: %v\n", err)
+		return
+	}
+
+	log.Println("adeeeu3")
+	defer db.Close()
+	log.Println("adeeeu4")
+	/*res, err := db.Query("select * from inscrits where id_alumne =" + req["nom"] + "and id_control =" + req["Id"])
+	if err != nil {*/
+	//log.Fatal(err)
+	db.Exec("insert into inscrits(id_alumne,id_control) values('" + req["nom"] + "', '" + req["Id"] + "');")
+	result = "OK"
+	/*} else {
+		result = "REPETIT"
+	}*/
+	//log.Println(res)
+	log.Println("paso1")
+	log.Println("adeeeu2")
+	json.NewEncoder(w).Encode(result)
+}
+
+func hAddProposta(w http.ResponseWriter, r *http.Request) {
+	log.Println("hAddProposta")
+	//req := struct{ Title string }{}
+	var result = ""
+	req := make(map[string]string)
+	json.NewDecoder(r.Body).Decode(&req)
+	log.Println("adeu1")
+	log.Println("nom: " + req["user"])
+	log.Println("tema: " + req["tema"])
+	log.Println("data: " + req["data"])
+	db, err := sql.Open("sqlite3", "./BBDD.db")
+	if err != nil {
+		fmt.Printf("open: %v\n", err)
+		return
+	}
+
+	log.Println("adeeeu3")
+	defer db.Close()
+	log.Println("adeeeu4")
+	/*res, err := db.Query("select * from inscrits where id_alumne =" + req["nom"] + "and id_control =" + req["Id"])
+	if err != nil {*/
+	//log.Fatal(err)
+	db.Exec("insert into proposats(tema,data,alumne) values('" + req["tema"] + "','" + req["data"] + "', '" + req["user"] + "');")
+	result = "OK"
+	/*} else {
+		result = "REPETIT"
+	}*/
+	//log.Println(res)
+	log.Println("paso1")
+	log.Println("adeeeu2")
+	json.NewEncoder(w).Encode(result)
 }
 
 func main() {
@@ -337,6 +418,10 @@ func main() {
 	http.Handle("/reservarControl", r)
 	r.HandleFunc("/getReserves", hGetReserves).Methods("GET")
 	http.Handle("/getReserves", r)
+	r.HandleFunc("/addProposta", hAddProposta).Methods("POST")
+	http.Handle("/addProposta", r)
+	r.HandleFunc("/getPropostes", hGetPropostes).Methods("GET")
+	http.Handle("/getPropostes", r)
 	crearBBDD(true)
 
 	//db.Exec("INSERT INTO  alumnes (nom, login) VALUES ('Marc Andrés Fontanet','marc.andres.fontanet');")
