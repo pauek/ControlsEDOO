@@ -14,6 +14,15 @@ import (
 	// "strconv"
 )
 
+/*
+var db sqlite.DB; ??
+
+func init() {
+	db = sqlite.Open('asdlkfasdl', sdkj¡)
+}
+
+*/
+
 func crearBBDD(crear bool) {
 	if crear == true {
 		os.Remove("./BBDD.db")
@@ -342,7 +351,10 @@ func hReservarControl(w http.ResponseWriter, r *http.Request) {
 	//req := struct{ Title string }{}
 	var result = ""
 	req := make(map[string]string)
-	json.NewDecoder(r.Body).Decode(&req)
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		fmt.Printf("ERROR AL DECODIFICAR LA RESERVA: %s\n", err)
+	}
 	log.Println("adeu1")
 	log.Println("nom" + req["nom"])
 	log.Println("Id" + req["Id"])
@@ -375,7 +387,10 @@ func hAddProposta(w http.ResponseWriter, r *http.Request) {
 	//req := struct{ Title string }{}
 	var result = ""
 	req := make(map[string]string)
-	json.NewDecoder(r.Body).Decode(&req)
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		fmt.Printf("ERROR AL DECODIFICAR LA PROPOSTA: %s\n", err)
+	}
 	log.Println("adeu1")
 	log.Println("nom: " + req["user"])
 	log.Println("tema: " + req["tema"])

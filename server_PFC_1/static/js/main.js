@@ -325,25 +325,22 @@ app.controller('user_ctrl', function ($scope, $resource, $location, $http, $rout
       $http.get('/getPropostes').
          success(function(data) { 
          	if(data != ""){
-      	   console.log(data);
-      	   console.log("nom user data: "+data[0].Nom_user);
-      	   for(var i = 0; i < data.length; i++) {
-      		   	$scope.proposats.push({
-              	tema: data[i].Id, 
-                data: data[i].data,
-                nom : data[i].nom,
-      	   	});
-      	   }
-      	   } 
-        }).
+      	      console.log(data);
+      	      console.log("nom user data: "+data[0].Nom_user);
+      	      for(var i = 0; i < data.length; i++) {
+      		      $scope.proposats.push({
+              	      tema: data[i].Tema, 
+                     data: data[i].Data,
+                     nom : data[i].Nom,
+      	   	   });
+      	      }
+               console.log("proposats: ", $scope.proposats);
+     	      } 
+         }).
          error(function(){
       	   alert("les propostes no s'han pogut carregar");
          });
-          console.log("proposats");
-         console.log($scope.proposats);
 	}
-		
-
 	
 	$scope.get_controls();	
 
