@@ -4,7 +4,7 @@
   <form ng-submit="add_proposta()">
     <select placeholder="escull tema" ng-model="tema_proposta" ng-options="t.tema for t in temes_proposta"></select>
     <br><br>
-    <quick-datepicker ng-model='proposta.data' date-filter='onlyWeekdays' disable-timepicker="true"></quick-datepicker>
+    <quick-datepicker ng-model='proposta.data' date-filter='onlyWeekdays'></quick-datepicker>
     <br><br><br>
     <button>Proposar</button>
   </form>

@@ -114,6 +114,10 @@ h4{
 	border: none !important;
 }
 
+.button_ok {
+	background-color: rgb(21, 221, 27);
+	border: none !important;
+}
 .per_fer{
 	background-color: red;
 	border-radius: 15px;

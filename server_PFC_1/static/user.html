@@ -10,9 +10,9 @@
       <span style="width:20em">Data</span>
     </li>
     <li class="per_fer" style="border:1px solid red; width:60em;" ng-repeat="c in controls_per_fer track by $index">
-      <span>{{c.tema}}</span>
-      <span>{{c.aula}}</span>
-      <span><quick-datepicker class="date" ng-model='c.data' date-filter='onlyWeekdays' date-format="EEEE, MMMM d, yyyy" time-format="hh:mm" ></quick-datepicker></span>
+      <span>{{c.Tema}}</span>
+      <span>{{c.Aula}}</span>
+      <span>{{c.Data}}</span>
       <span class="button_pen"><button type="button" ng-show="options.isVisible" class="button_pen" ng-click="inscrits_control($index)" class="btn btn-default btn-lg" >
       <span class="glyphicon glyphicon-list-alt"></span>
       </button></span>
@@ -30,18 +30,20 @@
     <editar-control></editar-control>
     <afegir-control></afegir-control>
     <veure-inscrits></veure-inscrits>
+    <veure-notes></veure-notes>
     <br><br><br>
     Controls fets
     <li id="head_table" style="width:20em;">
       <span style="border:1px solid red; width:200em;">Examen</span>
       <span style="width:20em">Data</span>
     </li>
-    <li class="fets" style="border:1px solid red; width:60em;" ng-repeat="c in controls_fets track by $index">
-      <span>{{c.tema}}</span>
-      <span><quick-datepicker ng-model='c.data' date-filter='onlyWeekdays' date-format="EEEE, MMMM d, yyyy" time-format="hh:mm" ></quick-datepicker></span>
-    </li>
+
+    <a style="cursor: pointer;" ng-click="click_notes($index)" ng-repeat="c in controls_fets track by $index"><li class="fets" style="border:1px solid red; width:60em;" >
+      <span>{{c.Tema}}</span>
+      <span>{{c.Data}}</span>
+    </li></a>
   </ul>
 	</div>
-	<proposats ng-show="!options.isVisible"></proposats>
+	<proposats></proposats>
   <proposar ng-show="!options.isVisible"></proposar>
 </div>

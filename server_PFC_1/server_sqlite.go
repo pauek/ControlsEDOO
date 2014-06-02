@@ -36,10 +36,10 @@ func crearBBDD(crear bool) {
 
 		db.Exec("CREATE TABLE controls (tema TEXT, aula TEXT, data INTEGER, id_control TEXT);")
 		db.Exec("CREATE TABLE proposats (tema TEXT, data TEXT, alumne TEXT);")
-		db.Exec("CREATE TABLE usuaris (nom TEXT, password TEXT, tipus TEXT, id_alumne TEXT);")
+		db.Exec("CREATE TABLE usuaris (nom TEXT, password TEXT, tipus TEXT);")
 		db.Exec("CREATE TABLE temes (tema TEXT, aula TEXT, data TEXT);")
-		db.Exec("CREATE TABLE inscrits (id_alumne TEXT, id_control TEXT);")
-		db.Exec("CREATE TABLE notes (id_alumne TEXT, id_control TEXT, nota TEXT);")
+		db.Exec("CREATE TABLE inscrits (alumne TEXT, id_control TEXT, nota TEXT);")
+		db.Exec("CREATE TABLE notes (alumne TEXT, id_control TEXT, nota TEXT);")
 		//trans, err := db.Begin()
 		//if err != nil {
 		//	log.Printf("begin: %v\n", err)
@@ -49,17 +49,18 @@ func crearBBDD(crear bool) {
 		db.Exec("insert into usuaris(nom, password, tipus) values('admin', '1234', '1');")
 		db.Exec("insert into usuaris(nom, password, tipus) values('marc', '1234', '0');")
 
-		db.Exec("insert into controls(tema, aula, data,id_control) values('Objectes + Strings', '2.18', 0000950612511, 21434);")
-		db.Exec("insert into controls(tema, aula, data, id_control) values('Getline + While cin', '1.08', 1408953473838, 49382);")
-		db.Exec("insert into controls(tema, aula, data,id_control) values('Vectors', '2.18', 1401839340904, 31412);")
-		db.Exec("insert into controls(tema, aula, data,id_control) values('Operadors', '2.18', 0000950612511, 36715);")
+		db.Exec("insert into controls(tema, aula, data,id_control) values('Objectes + Strings', '2.18', 0000950612511, '21434');")
+		db.Exec("insert into controls(tema, aula, data, id_control) values('Getline + While cin', '1.08', 1408953473838, '49382');")
+		db.Exec("insert into controls(tema, aula, data,id_control) values('Vectors', '2.18', 1401839340904, '31412');")
+		db.Exec("insert into controls(tema, aula, data,id_control) values('Operadors', '2.18', 0000950612511, '36715');")
 
-		db.Exec("insert into inscrits(id_alumne, id_control) values('marc', '21434');")
-		db.Exec("insert into inscrits(id_alumne, id_control) values('carles', '31412');")
-		db.Exec("insert into inscrits(id_alumne, id_control) values('roger', '31412');")
-		db.Exec("insert into inscrits(id_alumne, id_control) values('enric', '48937');")
-		db.Exec("insert into inscrits(id_alumne, id_control) values('anna', '31412');")
-		db.Exec("insert into inscrits(id_alumne, id_control) values('marta', '31412');")
+		db.Exec("insert into inscrits(alumne, id_control, nota) values('marc', '31412', 'Sense nota');")
+		db.Exec("insert into inscrits(alumne, id_control, nota) values('marc', '36715', 'Sense nota');")
+		db.Exec("insert into inscrits(alumne, id_control, nota) values('carles', '21434', 'Sense nota');")
+		db.Exec("insert into inscrits(alumne, id_control, nota) values('roger', '31412', 'Sense nota');")
+		db.Exec("insert into inscrits(alumne, id_control, nota) values('enric', '21434', 'Sense nota');")
+		db.Exec("insert into inscrits(alumne, id_control, nota) values('anna', '31412', 'Sense nota');")
+		db.Exec("insert into inscrits(alumne, id_control, nota) values('marta', '31412', 'Sense nota');")
 		log.Println("insert")
 		/*if err != nil {
 
@@ -223,8 +224,8 @@ func hAddControl(w http.ResponseWriter, r *http.Request) {
 }
 
 type Control struct {
-	Tema, Aula string
-	Id, Data   int
+	Tema, Aula, Id string
+	Data           int
 }
 
 func hGetControls(w http.ResponseWriter, r *http.Request) {
@@ -250,7 +251,8 @@ func hGetControls(w http.ResponseWriter, r *http.Request) {
 		if err := res.Scan(&ctrl.Tema, &ctrl.Aula, &ctrl.Data, &ctrl.Id); err != nil {
 			log.Fatal(err)
 		}
-		log.Println(ctrl.Tema)
+		log.Println("tema: " + ctrl.Tema)
+		log.Println("aula: " + ctrl.Aula)
 		req = append(req, ctrl)
 	}
 	log.Println("paso2")
@@ -261,7 +263,7 @@ func hGetControls(w http.ResponseWriter, r *http.Request) {
 }
 
 type Reserva struct {
-	Id_control, Nom_user string
+	Id_control, Alumne, Nota string
 }
 
 func hGetReserves(w http.ResponseWriter, r *http.Request) {
@@ -283,7 +285,7 @@ func hGetReserves(w http.ResponseWriter, r *http.Request) {
 	log.Println("reserves_paso1")
 	for stm.Next() {
 		rsrva := Reserva{}
-		if err := stm.Scan(&rsrva.Nom_user, &rsrva.Id_control); err != nil {
+		if err := stm.Scan(&rsrva.Alumne, &rsrva.Id_control, &rsrva.Nota); err != nil {
 			log.Fatal(err)
 		}
 		log.Println(rsrva.Id_control)
@@ -293,10 +295,6 @@ func hGetReserves(w http.ResponseWriter, r *http.Request) {
 	if err := stm.Err(); err != nil {
 		log.Fatal(err)
 	}
-	log.Println("req id: " + req[0].Id_control)
-	log.Println("req nom: " + req[0].Nom_user)
-	log.Println("req id2: " + req[1].Id_control)
-	log.Println("req nom2: " + req[1].Nom_user)
 	json.NewEncoder(w).Encode(req)
 }
 
@@ -358,6 +356,7 @@ func hReservarControl(w http.ResponseWriter, r *http.Request) {
 	log.Println("adeu1")
 	log.Println("nom" + req["nom"])
 	log.Println("Id" + req["Id"])
+	log.Println("Nota" + req["nota"])
 
 	db, err := sql.Open("sqlite3", "./BBDD.db")
 	if err != nil {
@@ -368,10 +367,10 @@ func hReservarControl(w http.ResponseWriter, r *http.Request) {
 	log.Println("adeeeu3")
 	defer db.Close()
 	log.Println("adeeeu4")
-	/*res, err := db.Query("select * from inscrits where id_alumne =" + req["nom"] + "and id_control =" + req["Id"])
+	/*res, err := db.Query("select * from inscrits where alumne =" + req["nom"] + "and id_control =" + req["Id"])
 	if err != nil {*/
 	//log.Fatal(err)
-	db.Exec("insert into inscrits(id_alumne,id_control) values('" + req["nom"] + "', '" + req["Id"] + "');")
+	db.Exec("insert into inscrits(alumne,id_control,nota) values('" + req["nom"] + "', '" + req["Id"] + "', '" + req["nota"] + "');")
 	result = "OK"
 	/*} else {
 		result = "REPETIT"
@@ -404,7 +403,7 @@ func hAddProposta(w http.ResponseWriter, r *http.Request) {
 	log.Println("adeeeu3")
 	defer db.Close()
 	log.Println("adeeeu4")
-	/*res, err := db.Query("select * from inscrits where id_alumne =" + req["nom"] + "and id_control =" + req["Id"])
+	/*res, err := db.Query("select * from inscrits where alumne =" + req["nom"] + "and id_control =" + req["Id"])
 	if err != nil {*/
 	//log.Fatal(err)
 	db.Exec("insert into proposats(tema,data,alumne) values('" + req["tema"] + "','" + req["data"] + "', '" + req["user"] + "');")
@@ -416,6 +415,172 @@ func hAddProposta(w http.ResponseWriter, r *http.Request) {
 	log.Println("paso1")
 	log.Println("adeeeu2")
 	json.NewEncoder(w).Encode(result)
+}
+
+func hDeleteControl(w http.ResponseWriter, r *http.Request) {
+	log.Println("hDeleteControl")
+	//req := struct{ Title string }{}
+	var result = "ok"
+	req := make(map[string]string)
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		fmt.Printf("ERROR AL DECODIFICAR DELETE CONTROL: %s\n", err)
+	}
+	log.Println("adeu1")
+	log.Println("id: " + req["Id"])
+	db, err := sql.Open("sqlite3", "./BBDD.db")
+	if err != nil {
+		fmt.Printf("open: %v\n", err)
+		return
+	}
+
+	log.Println("adeeeu3")
+	defer db.Close()
+	log.Println("adeeeu4")
+
+	db.Exec("delete from controls where id_control =" + req["Id"] + " ;")
+	db.Exec("delete from inscrits where id_control =" + req["Id"] + " ;")
+
+	/*} else {
+		result = "REPETIT"
+	}*/
+	//log.Println(res)
+	log.Println("paso1")
+	log.Println("adeeeu2")
+	json.NewEncoder(w).Encode(result)
+}
+
+type Nota struct {
+	Alumne, Id_control, Nota string
+}
+
+func hEditarNotes(w http.ResponseWriter, r *http.Request) {
+	log.Println("hDeleteControl")
+	//req := struct{ Title string }{}
+	var result = "ok"
+	//req := make(map[string]string)
+	req := []Nota{}
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		fmt.Printf("ERROR AL DECODIFICAR EDITAR NOTA: %s\n", err)
+	}
+	log.Println("adeu1")
+	log.Println("Alumne: " + req[0].Alumne)
+	db, err := sql.Open("sqlite3", "./BBDD.db")
+	if err != nil {
+		fmt.Printf("open: %v\n", err)
+		return
+	}
+
+	log.Println("adeeeu3")
+	defer db.Close()
+	log.Println("adeeeu4")
+
+	for i := 0; i < len(req); i++ {
+		db.Exec("UPDATE inscrits SET nota='" + req[i].Nota + "' WHERE id_control='" + req[i].Id_control + "' and alumne='" + req[i].Alumne + "';")
+	}
+
+	//db.Exec("delete from inscrits where id_control =" + req["Id"] + " ;")
+
+	/*} else {
+		result = "REPETIT"
+	}*/
+	//log.Println(res)
+	//log.Println("paso1")
+	//log.Println("adeeeu2")
+	json.NewEncoder(w).Encode(result)
+}
+
+func hInfoAlumne(w http.ResponseWriter, r *http.Request) {
+	Alumne, ok := mux.Vars(r)["alumne"]
+	if !ok {
+		fmt.Print("ERROR AL DECODIFICAR INFO ALUMNE")
+	} else {
+		log.Println(Alumne)
+
+	}
+
+	Tipus, ok2 := mux.Vars(r)["tipus"]
+	if !ok2 {
+		fmt.Print("ERROR AL DECODIFICAR INFO ALUMNE")
+	}
+
+	db, err := sql.Open("sqlite3", "./BBDD.db")
+	if err != nil {
+		fmt.Printf("open: %v\n", err)
+		return
+	}
+
+	defer db.Close()
+
+	if Tipus == "controls" {
+		req := []Control{}
+
+		stm, err := db.Query("select * from controls")
+		if err != nil {
+			log.Fatal(err)
+		}
+		for stm.Next() {
+			ctrl := Control{}
+			if err := stm.Scan(&ctrl.Tema, &ctrl.Aula, &ctrl.Data, &ctrl.Id); err != nil {
+				fmt.Printf("controls ERROR: %v\n", err)
+				log.Fatal(err)
+			}
+			//log.Println(rsrva.Id_control)
+			req = append(req, ctrl)
+		}
+		log.Println("reserves_paso2")
+		if err := stm.Err(); err != nil {
+			log.Fatal(err)
+		}
+		json.NewEncoder(w).Encode(req)
+	}
+
+	if Tipus == "inscrits" {
+		req := []Reserva{}
+
+		stm, err := db.Query("select * from inscrits where alumne='" + Alumne + "'")
+		if err != nil {
+			fmt.Printf("inscrits ERROR: %v\n", err)
+			log.Fatal(err)
+		}
+		for stm.Next() {
+			rsrva := Reserva{}
+			if err := stm.Scan(&rsrva.Alumne, &rsrva.Id_control, &rsrva.Nota); err != nil {
+				log.Fatal(err)
+			}
+			log.Println("alumne inscrits: " + rsrva.Alumne)
+			req = append(req, rsrva)
+		}
+		log.Println("reserves_paso3")
+		if err := stm.Err(); err != nil {
+			log.Fatal(err)
+		}
+		json.NewEncoder(w).Encode(req)
+	}
+
+	/*req := []interface{
+		controls: []Control{},
+		[]Reserva{},
+		[]Proposta{},
+	}*/
+	/*log.Println("GetPropostes")
+	req := []Proposta{}
+
+
+
+
+
+	if len(req) == 0 {
+		json.NewEncoder(w).Encode("BUIT")
+	} else {
+		json.NewEncoder(w).Encode(req)
+	}
+	/*log.Println("req id: " + req[0].Id_control)
+	log.Println("req nom: " + req[0].Nom_user)
+	log.Println("req id2: " + req[1].Id_control)
+	log.Println("req nom2: " + req[1].Nom_user)*/
+	//json.NewEncoder(w).Encode(req)
 }
 
 func main() {
@@ -437,10 +602,15 @@ func main() {
 	http.Handle("/addProposta", r)
 	r.HandleFunc("/getPropostes", hGetPropostes).Methods("GET")
 	http.Handle("/getPropostes", r)
+	r.HandleFunc("/deleteControl", hDeleteControl).Methods("POST")
+	http.Handle("/deleteControl", r)
+	r.HandleFunc("/editarNotes", hEditarNotes).Methods("POST")
+	http.Handle("/editarNotes", r)
+	r.HandleFunc("/infoAlumne/"+"{alumne}"+"/"+"{tipus}", hInfoAlumne).Methods("GET")
+	http.Handle("/infoAlumne/", r)
 	crearBBDD(true)
 
 	//db.Exec("INSERT INTO  alumnes (nom, login) VALUES ('Marc Andrés Fontanet','marc.andres.fontanet');")
-
 	http.Handle("js/", http.StripPrefix("static/js/", http.FileServer(http.Dir("static/js"))))
 	http.Handle("resources/", http.StripPrefix("static/resources/", http.FileServer(http.Dir("static/resources"))))
 	http.Handle("/", http.FileServer(http.Dir("static")))

@@ -1,0 +1,33 @@
+<div>
+	<h1>{{alumne}}</h1>
+	<br><br>
+	<div><h3>Controls apuntats</h3></div>
+	<ul style="list-style-type:none;">
+		<li id="head_table" style="width:80em; font-weight:bold; ">
+      		<div style="display:inline-block; width:20em;">Examen</div>
+      		<div style=" width:20em; display:inline-block;">Aula</div>
+      		<div style="width:20em; display:inline-block;">Data</div>
+   		</li>
+   		<br>
+    	<li class="" style="width:80em;" ng-repeat="c in controls_alumnes track by $index">
+      		<div style="width:20em; display:inline-block;">{{c.Tema}}</div>
+      		<div style="width:20em; display:inline-block;">{{c.Aula}}</div>
+      		<div style="width:20em; display:inline-block;">{{c.Data}}</div>
+		</li>
+	</ul>
+	<br><br>
+	<div><h3>Notes</h3></div>
+	<ul style="list-style-type:none;">
+		<li id="head_table" style="width:80em; font-weight:bold; ">
+      		<div style="display:inline-block; width:20em;">Examen</div>
+      		<div style=" width:20em; display:inline-block;">Data</div>
+      		<div style="width:20em; display:inline-block;">Nota</div>
+   		</li>
+   		<br>
+    	<li class="" style="width:80em;" ng-repeat="c in inscrits_alumnes track by $index">
+      		<div style="width:20em; display:inline-block;">{{c.Tema}}</div>
+      		<div style="width:20em; display:inline-block;">{{c.Data}}</div>
+      		<div style="width:20em; display:inline-block;">{{c.Nota}}</div>
+		</li>
+	</ul>
+</div>
