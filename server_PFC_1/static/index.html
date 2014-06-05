@@ -21,12 +21,22 @@
 <body ng-app="angular_app">
   	<div id="navigation">
   		<h1 id="title"><a href="#/user">Reserva de controls</a></h1>
-  		<div id="menu">
-  			<div id="navigation_user" class="dropdown" ng-controller="menu_ctrl">
-  			<a data-toggle="dropdown"  href=""><img src="img/glyphicons_003_user.png" style="float: left; width: 39px; margin-left:58px; margin-top: 14px;"><h3>{{user.getUserName()}}</h3></a>
+  		<div id="menu" ng-controller="menu_ctrl">
+  			<div ng-show="user.isLoggedIn()" id="navigation_user" class="dropdown" >
+  			<a data-toggle="dropdown"  href="">
+  				<img src="img/glyphicons_003_user.png" style="float: left; width: 39px; margin-left:58px; margin-top: 14px;">
+  				<h3>{{user.getUserName()}}</h3>
+  			</a>
   			<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-  				<li ng-repeat="items in menu" ng-show="items.visible.isAdmin()"><a class="items_menu" href={{items.link}} >{{items.name}}</a></li>
-  				<li><a class="items_menu" ng-click="login_out()"  href="">Tancar sessió</a></li>
+  				<li>
+  					<a class="items_menu"  href="">El meu compte</a>
+  				</li>
+  				<li>
+  					<a class="items_menu" ng-show="user.isAdmin()" href="#/afegir_alumnes">Afegir alumnes</a>
+  				</li>
+  				<li>
+  					<a class="items_menu" ng-click="login_out()"  href="">Tancar sessió</a>
+  				</li>
    				</ul>
 			</div>
 		</div>
@@ -34,3 +44,4 @@
   <ng-view></ng-view>
 </body>
 </html>
+
