@@ -328,52 +328,33 @@ func hGetPropostes(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	if len(req) == 0 {
+	/*if len(req) == 0 {
 		json.NewEncoder(w).Encode("BUIT")
-	} else {
-		json.NewEncoder(w).Encode(req)
-	}
-	/*log.Println("req id: " + req[0].Id_control)
-	log.Println("req nom: " + req[0].Nom_user)
-	log.Println("req id2: " + req[1].Id_control)
-	log.Println("req nom2: " + req[1].Nom_user)*/
+	} else {*/
+	json.NewEncoder(w).Encode(req)
+	//}
 
 }
 
 func hReservarControl(w http.ResponseWriter, r *http.Request) {
-	log.Println("hReservarControl")
-	//req := struct{ Title string }{}
-	var result = ""
+	result := "OK"
 	req := make(map[string]string)
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		fmt.Printf("ERROR AL DECODIFICAR LA RESERVA: %s\n", err)
+		result = "Error"
+		return
 	}
-	log.Println("adeu1")
-	log.Println("nom" + req["nom"])
-	log.Println("Id" + req["Id"])
-	log.Println("Nota" + req["nota"])
 
 	db, err := sql.Open("sqlite3", "./BBDD.db")
 	if err != nil {
 		fmt.Printf("open: %v\n", err)
 		return
 	}
-
-	log.Println("adeeeu3")
 	defer db.Close()
-	log.Println("adeeeu4")
-	/*res, err := db.Query("select * from inscrits where alumne =" + req["nom"] + "and id_control =" + req["Id"])
-	if err != nil {*/
-	//log.Fatal(err)
+
 	db.Exec("insert into inscrits(alumne,id_control,nota) values('" + req["nom"] + "', '" + req["Id"] + "', '" + req["nota"] + "');")
-	result = "OK"
-	/*} else {
-		result = "REPETIT"
-	}*/
-	//log.Println(res)
-	log.Println("paso1")
-	log.Println("adeeeu2")
+
 	json.NewEncoder(w).Encode(result)
 }
 
@@ -476,14 +457,6 @@ func hEditarNotes(w http.ResponseWriter, r *http.Request) {
 		db.Exec("UPDATE inscrits SET nota='" + req[i].Nota + "' WHERE id_control='" + req[i].Id_control + "' and alumne='" + req[i].Alumne + "';")
 	}
 
-	//db.Exec("delete from inscrits where id_control =" + req["Id"] + " ;")
-
-	/*} else {
-		result = "REPETIT"
-	}*/
-	//log.Println(res)
-	//log.Println("paso1")
-	//log.Println("adeeeu2")
 	json.NewEncoder(w).Encode(result)
 }
 
@@ -555,28 +528,6 @@ func hInfoAlumne(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(req)
 	}
 
-	/*req := []interface{
-		controls: []Control{},
-		[]Reserva{},
-		[]Proposta{},
-	}*/
-	/*log.Println("GetPropostes")
-	req := []Proposta{}
-
-
-
-
-
-	if len(req) == 0 {
-		json.NewEncoder(w).Encode("BUIT")
-	} else {
-		json.NewEncoder(w).Encode(req)
-	}
-	/*log.Println("req id: " + req[0].Id_control)
-	log.Println("req nom: " + req[0].Nom_user)
-	log.Println("req id2: " + req[1].Id_control)
-	log.Println("req nom2: " + req[1].Nom_user)*/
-	//json.NewEncoder(w).Encode(req)
 }
 
 func main() {

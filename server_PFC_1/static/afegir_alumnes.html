@@ -1,5 +1,5 @@
 <div>
-	<h1>Afegir alumne</h1>
+	<h1>Afegir usuari</h1>
 	<form ng-submit="add_user()">
   <input type="text" placeholder="username"     ng-model="addUser.user"></input>
   <input type="text" placeholder="Password" ng-model="addUser.password"></input>
@@ -8,7 +8,7 @@
   <br>
   <button data-toggle="dropdown">{{tipus}}</button>
   <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-  	<li><a href="" ng-click="admin()">Professor</a></li>
+  	<li><a href="" ng-click="admin()">Administrador</a></li>
   	<li><a href="" ng-click="alumne()">Alumne</a></li>
   </ul>
 </div>

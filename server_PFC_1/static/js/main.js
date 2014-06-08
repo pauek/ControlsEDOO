@@ -64,7 +64,6 @@ app.factory('User', function($http, $route, $location) {
 			   localStorage.user = User.nom;
 			  	console.log(localStorage.user);
 				$location.url('/user');
-				//$route.reload();
 		   }).error(function(){
 			   alert("Login failed!");
 			   $route.reload();
