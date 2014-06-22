@@ -30,7 +30,7 @@ func crearBBDD(crear bool) {
 
 		defer db.Close()
 
-		db.Exec("CREATE TABLE controls (tema TEXT, aula TEXT, data INTEGER, id_control TEXT);")
+		db.Exec("CREATE TABLE controls (tema TEXT, aula TEXT, data TEXT, id_control TEXT);")
 		db.Exec("CREATE TABLE proposats (tema TEXT, data TEXT, alumne TEXT);")
 		db.Exec("CREATE TABLE usuaris (nom TEXT, password TEXT, tipus TEXT);")
 		db.Exec("CREATE TABLE temes (tema TEXT, aula TEXT, data TEXT);")

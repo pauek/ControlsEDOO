@@ -8,9 +8,9 @@
 	 </tr>
 	 <tr  ng-repeat="c in proposats">
 		<td>{{c.tema}}</td>
-		<td>{{c.data}}</td>
+		<td>{{c.data_data}}</td>
 		<td>{{c.nom}}</td>
-		<td><button ng-show="options.isVisible">Acceptar proposta</button></td>
+		<td><button  ng-show="options.isVisible" ng-click="acceptar_proposta($index)">Acceptar proposta</button></td>
 	 </tr>
   </table>
 </div>	

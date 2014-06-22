@@ -378,7 +378,6 @@ $scope.notes_ex = false;
 	}
 
 	$scope.get_controls = function() {
-	   console.log("controls demanats");
       $http.get('/server/getControls').
          success(function(data) { 
       	   console.log(data);
@@ -394,12 +393,10 @@ $scope.notes_ex = false;
       		   		$scope.controls_fets.push(data[i]);
                    }
       	   	}
-      	   	 //console.log("controls per fer",$scope.controls_per_fer[i]);
       	   	 $scope.get_reserves();
          }).
          error(function(){
       	   alert("els controls no s'han pogut carregar");
-      	   console.log("controls demanats!!!!!!!!!");
          });
 	}
 
@@ -416,12 +413,14 @@ $scope.notes_ex = false;
       	      for(var i = 0; i < data.length; i++) {
       	      	a = new Date();
       	      	a.setTime(data[i].Data);
-				data[i].Data = a.toString().substring(0,24);
+				a = a.toString().substring(0,24);
       		      $scope.proposats.push({
               	      tema: data[i].Tema, 
                      data: data[i].Data,
                      nom : data[i].Nom,
+                     data_data : a,
       	   	   });
+
       	      }
                console.log("proposats: ", $scope.proposats);
      	      } 
@@ -442,6 +441,48 @@ $scope.notes_ex = false;
 	$scope.tema_proposta = {}
 	$scope.proposta.tema ="tema";
 	$scope.proposta.data = new Date();
+
+
+   $scope.acceptar_proposta = function(index){
+      console.log("acceptar proposta");
+     var afegit = false;
+      while(afegit == false){
+               afegit = true;
+               console.log("bucleeeee");
+                $scope.proposats[index].Id = Math.round(Math.random()*10000);
+                $scope.proposats[index].Id =  $scope.proposats[index].Id.toString();
+                $scope.proposats[index].aula = "Per determinar";
+               console.log("enviant?");
+               $http.post('/server/addControl', $scope.proposats[index]).
+                  success(function(data){
+                     console.log(data.stat);
+                     if(data.stat === "ok"){
+                        console.log("if correcte");
+                        afegit = true;
+                        $scope.controls_per_fer.push({
+                           Tema:  $scope.proposats[index].tema, 
+                           Data:  $scope.proposats[index].data_data, 
+                           Aula:  $scope.proposats[index].aula, 
+                           Id:  $scope.proposats[index].Id
+                        });
+                        console.log("Ara si que afegeixo");
+                     } else if(data.stat = "SameData") {
+                        alert("Examen repetit!");
+                        afegit = true;
+                     } else { 
+                        console.log("mareix ID! repetimos?");
+                        
+                     }
+
+                     $scope.proposats.splice(index,1);
+                  }).error(function(){
+                     alert("error");
+                  });
+               }
+
+   }
+
+
 	
 	$scope.add_proposta = function(){
 		console.log("reservar control");
@@ -453,7 +494,8 @@ $scope.notes_ex = false;
 		   success(function(data){
 		   	$scope.proposats.push({
 		   		tema: $scope.tema_proposta.tema,
-		   		data: $scope.proposta.data.toString().substring(0,15),
+		   		data: $scope.proposta.data.getTime().toString(),
+               data_data: $scope.proposta.data.toString().substring(0,24),
 		   		nom: $scope.proposta_send.user,
 		   	});
 		   	alert("Proposta feta");
@@ -629,55 +671,6 @@ app.directive("proposar", function() {
       restrict: "E",
       templateUrl: 'proposar.html'
    };
-});
-
-
-
-app.directive('editarControl', function () {
-    return {
-        restrict: 'E',
-        replace: true,
-        template: '<div>' +
-'  <div class="modal fade" id="loginModal" tabindex="-1" + role = "dialog" aria-labelledby = "myModalLabel" aria-hidden = "true" > ' +
-'    <div class = "modal-dialog" > ' +
-'      <form name = "form" ng - submit = "submit()" > ' +
-'        <div class = "modal-content" >' +
-'          <div style="background-color:#F1BF4C;"  class = "modal-header" > <h2>Editar control</h2> ' +
-'            <button type="button" class = "close" data-dismiss="modal" aria-hidden="true" ng-click="cancelar()" > Cancel </button>' +
-'              <h3> </h3 > ' +
-'          </div>' +
-'          <div class="modal-body">' +
-'            <table border="0"><tr><td>tema: </td><td><select" ng-model="affControl" ng-options="t.tema for t in temes_proposta"></select></td></tr> ' +
-'            <tr><td>Aula: </td><td><input type = "text" ng-model = "controls_per_fer[index_editar].Aula" > </input></td></tr>' +
-'            <tr><td>Data: </td><td><quick-datepicker ng-model="j"></quick-datepicker></td></tr>' +
-'            <tr><td colsp an="2"><input type="submit" class="btn btn-primary" id="submit" ng-click="submit()" value="Acceptar"></input ></td></tr></table> ' +
-'          </div>' +
-'        </div > ' +
-'      </form>' +
-'    </div > ' +
-'  </div>' +
-'</div > ',
-        controller: function ($scope) {
-            
-            $scope.submit = function() {
-                $scope.login();
-		        $("#loginModal").modal('hide');
-            };
-            
-            $scope.cancelar = function() {
-            	console.log("cancel");
-                $scope.editar_Control = false;
-		        $("#loginModal").modal('hide');
-            };
-            
-            $scope.$watch('editar_Control', function() {
-                if ($scope.editar_Control) {
-                	$scope.editar_Control = false;
-		            $("#loginModal").modal('show');
-                };
-           });   
-        }
-    };
 });
 
 
