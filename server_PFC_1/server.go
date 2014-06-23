@@ -427,6 +427,39 @@ func hDeleteControl(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(result)
 }
 
+func hDeleteProposta(w http.ResponseWriter, r *http.Request) {
+	log.Println("hDeleteProposta")
+	//req := struct{ Title string }{}
+	var result = "ok"
+	req := make(map[string]string)
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		fmt.Printf("ERROR AL DECODIFICAR DELETE CONTROL: %s\n", err)
+	}
+	log.Println("adeu1")
+	log.Println("tema: " + req["tema"])
+	log.Println("data: " + req["data"])
+	log.Println("alumne: " + req["nom"])
+	db, err := sql.Open("sqlite3", "./BBDD.db")
+	if err != nil {
+		fmt.Printf("open: %v\n", err)
+		return
+	}
+
+	log.Println("adeeeu3")
+	defer db.Close()
+	log.Println("adeeeu4")
+	db.Exec("delete from proposats where tema ='" + req["tema"] + "' AND alumne ='" + req["nom"] + "' AND data =" + req["data"] + ";")
+
+	/*} else {
+		result = "REPETIT"
+	}*/
+	//log.Println(res)
+	log.Println("paso1")
+	log.Println("adeeeu2")
+	json.NewEncoder(w).Encode(result)
+}
+
 type Nota struct {
 	Alumne, Id_control, Nota string
 }
@@ -542,6 +575,7 @@ func main() {
 	r.HandleFunc(Prefix+"addProposta", hAddProposta).Methods("POST")
 	r.HandleFunc(Prefix+"getPropostes", hGetPropostes).Methods("GET")
 	r.HandleFunc(Prefix+"deleteControl", hDeleteControl).Methods("POST")
+	r.HandleFunc(Prefix+"deleteProposta", hDeleteProposta).Methods("POST")
 	r.HandleFunc(Prefix+"editarNotes", hEditarNotes).Methods("POST")
 	r.HandleFunc(Prefix+"infoAlumne/"+"{alumne}"+"/"+"{tipus}", hInfoAlumne).Methods("GET")
 	http.Handle(Prefix, r)

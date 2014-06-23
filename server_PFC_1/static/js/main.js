@@ -473,7 +473,12 @@ $scope.notes_ex = false;
                         console.log("mareix ID! repetimos?");
                         
                      }
-
+                     $http.post('/server/deleteProposta', $scope.proposats[index]).
+                        success(function(data){
+                           console.log("deleteeeee");
+                         }).error(function(){
+                           alert("Error al suprimir");
+                        });
                      $scope.proposats.splice(index,1);
                   }).error(function(){
                      alert("error");
