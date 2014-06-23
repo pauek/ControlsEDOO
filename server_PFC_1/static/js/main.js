@@ -335,8 +335,7 @@ $scope.notes_ex = false;
 		   success(function(data){
 		   	alert("T'has apuntat correctament");
 		   	$("#"+index).attr('value', 'apuntat');
-		   	$("#"+index).attr('style', 'pointer-events: none;');
-			$("#"+index).css( "background-color", "green" );
+		   	$("#"+index).addClass('apuntat');
 		   }).error(function(){
 			   alert("Error al apuntar-se");
 		   });
@@ -354,26 +353,24 @@ $scope.notes_ex = false;
 
       	   console.log("reservats",$scope.reservats);
 					console.log("bucleee: " + $scope.reservats.length );
-      	   for(var e = 0; e < $scope.reservats.length;e++){
-			console.log("bucleee3");
-			for(var i = 0; i< $scope.controls_per_fer.length;i++){
-				console.log("alumne",$scope.reservats[e].Alumne);
-				if($scope.reservats[e].Alumne == User.getUserName()){
-					console.log("bucleee2");
-					console.log("id_control1",$scope.reservats[e].Id_control);
-					console.log("id_control2",$scope.controls_per_fer[i].Id);
-					if($scope.reservats[e].Id_control == $scope.controls_per_fer[i].Id){
-						console.log("finn");
-							$("#"+i).attr('value', 'apuntat');
-							$("#"+i).attr('style', 'pointer-events: none;');
-							$("#"+i).css( "background-color", "green" );
-					}
-				}
-			}
-		} 
-        }).
-         error(function(){
-      	   alert("les reserves no s'han pogut carregar");
+      	    for(var e = 0; e < $scope.reservats.length;e++){
+	       console.log("bucleee3");
+	       for(var i = 0; i< $scope.controls_per_fer.length;i++){
+		  console.log("alumne",$scope.reservats[e].Alumne);
+		  if($scope.reservats[e].Alumne == User.getUserName()){
+		     console.log("bucleee2");
+		     console.log("id_control1",$scope.reservats[e].Id_control);
+		     console.log("id_control2",$scope.controls_per_fer[i].Id);
+		     if($scope.reservats[e].Id_control == $scope.controls_per_fer[i].Id){
+			console.log("finn");
+			$("#"+i).attr('value', 'apuntat');
+			$("#"+i).addClass('apuntat');
+		     }
+		  }
+	       }
+	    } 
+         }).error(function(){
+      	    alert("les reserves no s'han pogut carregar");
          });
 	}
 
@@ -451,7 +448,7 @@ $scope.notes_ex = false;
                console.log("bucleeeee");
                 $scope.proposats[index].Id = Math.round(Math.random()*10000);
                 $scope.proposats[index].Id =  $scope.proposats[index].Id.toString();
-                $scope.proposats[index].aula = "Per determinar";
+                $scope.proposats[index].aula = "?";
                console.log("enviant?");
                $http.post('/server/addControl', $scope.proposats[index]).
                   success(function(data){
@@ -533,7 +530,7 @@ $scope.notes_ex = false;
       	if($scope.affControl2.tema !== undefined){
             console.log("control.aula: " +$scope.affControl.aula);
       		if($scope.affControl.aula == ""){
-      			$scope.affControl.aula = "Per determinar";
+      			$scope.affControl.aula = "?";
       		}
       		var afegit = false;
       		while(afegit == false){
@@ -606,9 +603,10 @@ app.controller('affAlumnes_ctrl', function ($scope, $http, $location, User) {
 		$location.url('/login');
    }
 
-	$scope.addUser = {};
+   $scope.addUser = {};
 	$scope.addUser.tipus = 0;
 	$scope.tipus = "Privilegis";
+   $scope.tipusUsuaris = ["Professor", "Alumne"];
 	
 	$scope.admin = function(){
 		console.log("Professor!!!");
@@ -623,6 +621,16 @@ app.controller('affAlumnes_ctrl', function ($scope, $http, $location, User) {
 	}
 	$scope.add_user = function(){
 		var a = false;
+           console.log($scope.addUser);
+           if (!$scope.addUser.user || $scope.addUser.user === "") {
+              alert("L'usuari està buit.");
+              return;
+           }
+           if (!$scope.addUser.password || $scope.addUser.password === "") {
+              alert("El password està buit.");
+              return;
+           }
+
 		if($scope.tipus == "Professor" ||$scope.tipus == "professor"){
 			$scope.addUser.tipus = 1;
 			a = true;
@@ -632,23 +640,19 @@ app.controller('affAlumnes_ctrl', function ($scope, $http, $location, User) {
 			a = true;
 		}
 		if(a == true){
-			console.log($scope.addUser);
 			$scope.affUser = {};
 			$scope.affUser.user = $scope.addUser.user;
 			$scope.affUser.password = $scope.addUser.password;
 			$scope.affUser.tipus = $scope.addUser.tipus.toString();
 			$http.post('/server/addUser',$scope.affUser).
 		   	success(function(data){
-			   	console.log(data.ok);
 			   	console.log(data.ok === "ok");
 			   	if(data.ok === "ok"){
-				   	console.log("oleeee");
 				   	$("#resposta_addUser").html("L'usuari s'ha afegit correctament");
 				   	$("#resposta_addUser").css( "color", "green" );
 				   	$scope.addUser.user = "";
 				   	$scope.addUser.password = "";
 			   	} else {
-						console.log("cacaaaaa");
 						$("#resposta_addUser").html("Aquest usuari ja existeix");
 						$("#resposta_addUser").css( "color", "red" );
 					}
@@ -708,15 +712,12 @@ app.directive('afegirControl', function () {
         controller: function ($scope) {
             
             $scope.click = function() {
-            	console.log("afageeeeeeeeix");
                 $scope.afegir_control();
-                
-		        
             };
             
             $scope.cancel = function() {
-                $scope.afegir_Control = false;
-		        $("#afegirModal").modal('hide');
+               $scope.afegir_Control = false;
+	       $("#afegirModal").modal('hide');
             };
             
             $scope.$watch('afegir_Control', function() {

@@ -1,12 +1,15 @@
 <div id="proposar">
-  <br><br><br><br>
-  <h2>Proposar Control</h2>
+  <h5>Proposar Control</h5>
   <form ng-submit="add_proposta()">
-    <select placeholder="escull tema" ng-model="tema_proposta" ng-options="t.tema for t in temes_proposta"></select>
-    <br><br>
-    <quick-datepicker ng-model='proposta.data' date-filter='onlyWeekdays'></quick-datepicker>
-    <br><br><br>
-    <button>Proposar</button>
+    <select class="item"
+            ng-model="tema_proposta" 
+            ng-options="t.tema for t in temes_proposta">
+      <option value="" disabled>Escull tema</option>
+    </select>
+    <quick-datepicker ng-model='proposta.data' 
+                      date-filter='onlyWeekdays'>
+    </quick-datepicker>
+    <button class="item">Proposar</button>
   </form>
   <div id="resposta_proposta"></div>
 </div>  

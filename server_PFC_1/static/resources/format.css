@@ -1,133 +1,172 @@
-body{
-	margin: 0px !important;
-	/*background-color: #E7B823;*/
+body {
+  margin: 0px !important;
 }
+h1 { margin-top: .3em; }
+
+#content {
+  padding: 0;
+  padding-left: 1.5em;
+}
+
 #navigation {
-clear: both;
-overflow: hidden;
-min-width: 1027px;
-max-width: 100%;
-margin: 0 auto;
-/*background: #070707;*/
-background-color: #000;
+  clear: both;
+  overflow: hidden;
+  margin: 0 auto;
+  background-color: #333;
+  padding: 0 1.5em;
 }
 
-#menu{
-	float: right;
-	background-color: #000;
-	width: 317px;
+#menu {
+  float: right;
+  background-color: #000;
+  width: 317px;
 }
 
-#navigation_user{
-	position: absolute;
-	margin-top: 10px;
-	margin-right: 10px; 
-	background-color: #AB4028;
-	width: 250px;
-	/*height: 0px;*/
-}
-#navigation_user a{
-text-decoration: none;
-color: #3373DF;
-/*color: red; */
-}
-#navigation_user h3{
-/*font-family: 2em Arial, Helvetica;*/
-width: 177px;
-text-align: center;
+#navigation_user {
+  position: absolute;
+  width: 250px;
+  color: #aaa;
 }
 
-#navigation_user ul{
-	background-color: #AB4028;
-	/*position: relative;*/
-	/*z-index: 100 !important;*/
-	width: 250px;
-	/*padding: 0px;*/
+#navigation_user a {
+  text-decoration: none;
+  color: #80B6F4;
 }
 
-#navigation_user ul li{
-	text-align: center;
+#navigation_user h3 {
+  width: 177px;
+  text-align: center;
 }
 
-#navigation_user ul li a{
-	text-align: center;
-	/*color: #FFF;*/
+#navigation_user ul {
+  background: #333;
+  width: 250px;
+  margin-left: 0;
+  padding-left: 0;
 }
 
-#title{
-	/*color: #FFF;*/
-	float: left;
-}
-#title a{
-	color: #EC910E;
-	text-decoration: none;
+#navigation_user ul li {
+  text-align: center;
 }
 
-#edit_buton{
-	/*visibility: hidden;*/
+#navigation_user ul li a {
+  text-align: center;
 }
 
-.programats{
-	/*background-color: #888;*/
-	border-collapse: collapse;
-	/*border: 2px solid black;*/
-	width: 50%;
-	text-align: center;
-	margin: 5px; 
-	/*box-shadow: 10px 10px 5px 2px rgba(100, 100, 100, 0.5)*/
+#title {
+  float: left;
 }
+
+#title a {
+  color: #EC910E;
+  text-decoration: none;
+}
+
+#edit_buton {
+}
+
+.programats {
+  border-collapse: collapse;
+  width: 50%;
+  text-align: center;
+  margin: 5px; 
+}
+
 .programats tr td {
-	padding: 0px;
-	/*border: 1px  black;*/
-	margin-top: 10px;
-	/*border-radius: 15px;*/
+  padding: 0px;
+  margin-top: 10px;
 }
 
 table.programats > tbody > tr > th {
-	border-radius: 15px;
-	background-color: #1CCAEC;
-	color: #CCC;
-	/*border: 2px solid black;*/
-	font-size: 1.5em;
-	text-align: center;
+  border-radius: 15px;
+  background-color: #1CCAEC;
+  color: #CCC;
+  font-size: 1.5em;
+  text-align: center;
 }
 
-#head_table span{
-	border-radius: 15px;
-	background-color: #1CCAEC;
-	color: #CCC;
-	/*border: 2px solid black;*/
-	font-size: 1.5em;
-	text-align: center;
+.head_table {
+  font-weight: bold;
+  color: #666;
+}
+#div_programats li div, #div_proposats li div {
+  display: inline-block;
+  padding: .3em 0;
+}
+#div_programats li a {
+  display: block;
+}
+#div_programats ul, #div_proposats ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+#div_programats h4, #div_proposats h4 {
+  font-weight: bold;
+  margin-top: 1.5em;
+  border-bottom: 1px solid #ccc;
+}
+#div_programats #fets li.link {
+  cursor: pointer;
+  color: #438CE1;
+}
+#div_programats #fets li.link:hover {
+  background: #f7f7f7;
+}
+.col1 { width: 12em; }
+.col2 { width: 7em; }
+.col3 { width: 20em; }
+
+#div_proposats {
+  margin-top: 3em;
 }
 
-#div_proposats{
-	margin-top: 100px;
+h4 {
+  color: #404B4D;
 }
 
-h4{
-	color: #404B4D;
-}
-
-.button_pen {
-	background-color: white;
-	border: none !important;
+span.button_pen {
+  background-color: white;
+  border: none !important;
+  cursor: pointer;
+  padding-left: .5em;
 }
 
 .button_ok {
-	background-color: rgb(21, 221, 27);
-	border: none !important;
-}
-.per_fer{
-	background-color: red;
-	border-radius: 15px;
+  background-color: rgb(21, 221, 27);
+  border: none !important;
 }
 
-.fets{
-	background-color: yellow;
-	border-radius: 15px;
+.date {
+  margin-bottom: 8px;
 }
 
-.date{
-	margin-bottom: 8px;
+form input {
+  margin-bottom: .5em;
+}
+
+#proposar {
+  width: 40em;
+  border: 1px solid #ccc;
+  background: #f0f0f0;
+  border-radius: 3px;
+  margin-top: 4em;
+  padding: 1em;
+}
+#proposar h5 {
+  font-weight: bold;
+  margin: 0 0 .5em 0;
+}
+#proposar form {
+  vertical-align: middle;
+}
+#proposar form .item {
+  padding: 5px 8px;
+}
+#proposar form button {
+  float: right;
+}
+
+.apuntat {
+  background: rgb(22, 236, 22);
+  pointer-events: none; /* chapussa! */
 }

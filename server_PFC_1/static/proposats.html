@@ -1,16 +1,20 @@
-<div id="div_proposats">
-  <h3>Controls proposats</h3>
-  <table class="programats">
-	 <tr>
-		<th><h4>Examen</h4></th>
-		<th><h4>Data</h4></th>
-		<th><h4>Alumne</h4></th>
-	 </tr>
-	 <tr  ng-repeat="c in proposats">
-		<td>{{c.tema}}</td>
-		<td>{{c.data_data}}</td>
-		<td>{{c.nom}}</td>
-		<td><button  ng-show="options.isVisible" ng-click="acceptar_proposta($index)">Acceptar proposta</button></td>
-	 </tr>
-  </table>
+<div id="div_proposats" ng-show="proposats.length > 0">
+  <h4>Proposats</h4>
+  <ul>
+    <li class="head_table">
+      <div class="col1">Tema</div>
+      <div class="col2">Alumne</div>
+      <div class="col3">Data</div>
+    </li>
+
+    <li ng-repeat="c in proposats">
+      <div class="col1">{{c.tema}}</div>
+      <div class="col2">{{c.nom}}</div>
+      <div class="col3">{{c.data_data}}</div>
+      <button ng-show="options.isVisible" 
+              ng-click="acceptar_proposta($index)">
+        Acceptar proposta
+      </button>
+    </li>
+  </ul>
 </div>	
